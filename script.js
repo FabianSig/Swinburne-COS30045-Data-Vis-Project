@@ -11,16 +11,16 @@ function init() {
         var padding = 40;
 
         var dataset = [
-                        [5, 20],
-                        [500, 90],
-                        [250, 50],
-                        [100, 33],
-                        [330, 95],
-                        [410, 12],
-                        [475, 44],
-                        [25, 67],
-                        [85, 21],
-                        [220, 88]
+                        [5, 20, 10],
+                        [500, 90, 10],
+                        [250, 50, 12],
+                        [100, 33, 18],
+                        [330, 95, 6],
+                        [410, 12, 8],
+                        [475, 44, 17],
+                        [25, 67, 9],
+                        [85, 21, 8],
+                        [220, 88, 10]
                         ];
 
         var circleRadius = 3
@@ -56,20 +56,9 @@ function init() {
             .append("circle")
             .attr("cx", d => xScale(d[0]))
             .attr("cy", d => yScale(d[1]))
-            .attr("r", d => circleRadius)
+            .attr("r", d => d[2])
             .style("fill", d => d[0] > 300 ? "red" : "#2541B2");
         
-
-       
-        svg.selectAll("text")
-            .data(dataset)
-            .enter()
-            .append("text")
-            .text(d => d[0] + "," + d[1])
-            .attr("x", d => xScale(d[0])) 
-            .attr("y", d => yScale(d[1]) - circleRadius)
-            .style("font-family", "sans-serif")
-            .style("font-size", "10px");
         
         
         svg.append("g")
