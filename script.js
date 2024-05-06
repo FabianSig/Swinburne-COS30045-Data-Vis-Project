@@ -59,7 +59,7 @@ function init() {
                 .range([padding, w - padding]);
 
             var yScale = d3.scaleLinear()
-                .domain([0, d3.max(dataForPlot, d => d.lifeExpec)])
+                .domain([50, 100])
                 .range([h - padding, padding]);
 
             var xAxis = d3.axisBottom(xScale).ticks(5);
