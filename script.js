@@ -50,10 +50,10 @@ function init() {
                 lifeExpec: country.years[year] ? country.years[year].expec : null
             })).filter(item => item.gdp && item.lifeExpec);
 
-            drawChart(dataForPlot);
+            drawChart(dataForPlot, year);
         }
 
-        function drawChart(dataForPlot) {
+        function drawChart(dataForPlot, year) {
             var xScale = d3.scaleLinear()
                 .domain([0, d3.max(dataForPlot, d => d.gdp)])
                 .range([padding, w - padding]);
