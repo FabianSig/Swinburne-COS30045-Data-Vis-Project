@@ -13,3 +13,7 @@ button:hover{
     color:#000000;
     background-color:#FFFFFF;
 }
+
+#chart {
+    text-align: center;
+}
