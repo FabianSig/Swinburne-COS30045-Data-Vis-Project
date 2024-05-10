@@ -27,11 +27,13 @@ function init() {
     }
 
     function drawChart(dataForPlot, year) {
+        console.log(dataForPlot)
         let filteredData = dataForPlot.map(country => ({
             country: country.country,
             gdp: country.years[year] ? country.years[year].gdp : null,
             lifeExpec: country.years[year] ? country.years[year].expec : null
-        })).filter(item => item.gdp && item.lifeExpec);
+            })).filter(item => item.gdp && item.lifeExpec);
+        console.log("Filtered Data: ", filteredData);
 
         var xScale = d3.scaleLinear()
             .domain([0, getMaxVal()])
@@ -44,25 +46,33 @@ function init() {
         svg.select('.x-axis').call(d3.axisBottom(xScale).ticks(5));
         svg.select('.y-axis').call(d3.axisLeft(yScale).ticks(5));
 
-        var circles = svg.selectAll('circle')
+        var update = svg.selectAll('circle')
             .data(filteredData, d => d.country);
 
-        circles.enter().append('circle')
+        var enter = update.enter()
+            .append('circle')
+            .attr('class', 'node')
             .attr('r', 5)
             .style('fill', 'blue')
-            .merge(circles)
+            .on('mouseover', function(event, d) {
+                d3.select('#tooltip')
+                    .style('visibility', 'visible')
+                    .html(`Country: ${d.country}<br>Life Expectancy: ${d.lifeExpec}`)
+                    .style('top', (event.pageY - 10) + 'px')
+                    .style('left', (event.pageX + 10) + 'px');
+            })
+            .on('mouseout', function() {
+                d3.select('#tooltip').style('visibility', 'hidden');
+            });
+
+        enter.merge(update)
             .transition()
             .duration(750)
             .attr('cx', d => xScale(d.gdp))
             .attr('cy', d => yScale(d.lifeExpec));
 
-        circles.exit()
-            .transition()
-            .duration(750)
-            .attr('r', 0)
-            .remove();
+        update.exit().remove();
     }
-
 
     loadLifeData().then(() => {
         updateChart(document.getElementById('yearSlider').value);

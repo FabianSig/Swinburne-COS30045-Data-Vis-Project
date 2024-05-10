@@ -18,20 +18,14 @@ button:hover{
     text-align: center;
 }
 
-.tooltip {
+#tooltip {
     position: absolute;
-    text-align: center;
-    width: 180px; 
-    min-height: 50px; 
-    padding: 8px;
-    font: 12px sans-serif;
-    background: lightsteelblue;
-    border: 0;
-    border-radius: 8px;
+    visibility: hidden;
+    padding: 10px;
+    background: white;
+    border: 1px solid #000;
+    border-radius: 5px;
     pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.5s;
-    white-space: normal;
-    overflow: hidden; 
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.2); 
+    z-index: 100;
 }
+

@@ -29,8 +29,10 @@ export function processData(data) {
         _maxVal = localMax;
     }
 
+    console.log(result);  // Check how data is processed for each country and year
     return result;
 }
+
 
 export function loadLifeData() {
     return d3.dsv(";", "./data/cleanedData/lifeExpectancy_cleaned_csv.csv", processData)
@@ -43,6 +45,7 @@ export function loadData(csvPath) {
     return d3.dsv(";", csvPath, processData)
         .then(function(data) {
             let dataMap = new Map(data.map(item => [item.country, item.years]));
+            console.log(dataMap)
             lifeData.forEach(item => {
                 if (dataMap.has(item.country)) {
                     let dataByYears = dataMap.get(item.country);
