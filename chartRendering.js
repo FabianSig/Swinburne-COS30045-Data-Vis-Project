@@ -1,4 +1,4 @@
-import { lifeData, getMaxVal, setMaxVal, loadLifeData, loadGDPData } from './dataProcessing.js';
+import { lifeData, getMaxVal, setMaxVal, loadLifeData, loadData } from './dataProcessing.js';
 function init() {
     var w = 800;
     var h = 600;
@@ -21,12 +21,12 @@ function init() {
         .attr("x", w - padding)
         .attr("y", padding);
 
-    function updateChart(year, label) {
+    function updateChart(year) {
         yearLabel.text(year);
-        drawChart(lifeData, year, label);
+        drawChart(lifeData, year);
     }
 
-    function drawChart(dataForPlot, year, label) {
+    function drawChart(dataForPlot, year) {
         let filteredData = dataForPlot.map(country => ({
             country: country.country,
             gdp: country.years[year] ? country.years[year].gdp : null,
@@ -63,14 +63,16 @@ function init() {
             .remove();
     }
 
+
     loadLifeData().then(() => {
         updateChart(document.getElementById('yearSlider').value);
     });
 
     document.getElementById('csvSelect').addEventListener('change', function () {
+        console.log(this.value);
         var csvPath = `./data/cleanedData/${this.value}`;
         setMaxVal(0); // Reset maxGDP
-        loadGDPData(csvPath).then(() => {
+        loadData(csvPath).then(() => {
             updateChart(document.getElementById('yearSlider').value, this.options[this.selectedIndex].text);
         });
     });

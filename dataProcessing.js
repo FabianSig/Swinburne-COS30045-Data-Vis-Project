@@ -1,4 +1,3 @@
-// This will store the fetched and processed data
 export var lifeData = [];
 var _maxVal = 0;
 
@@ -10,7 +9,6 @@ export function setMaxVal(value) {
     _maxVal = value;
 }
 
-// Function to process data
 export function processData(data) {
     let result = {
         country: data.Country,
@@ -19,39 +17,37 @@ export function processData(data) {
     let localMax = 0;
     Object.keys(data).forEach(key => {
         if (key !== 'Country') {
-            let gdpValue = +data[key];
+            let value = +data[key];
             result.years[key] = {
-                expec: gdpValue
+                expec: value
             };
-            if (gdpValue > localMax) localMax = gdpValue;
+            if (value > localMax) localMax = value;
         }
     });
 
     if (localMax > _maxVal) {
-        _maxVal = localMax;  // Update the global maximum GDP if the local max is higher
+        _maxVal = localMax;
     }
 
     return result;
 }
 
-// Function to load life expectancy data
 export function loadLifeData() {
     return d3.dsv(";", "./data/cleanedData/lifeExpectancy_cleaned_csv.csv", processData)
         .then(function(data) {
-            lifeData = data; // Store life data
+            lifeData = data;
         });
 }
 
-// Function to load GDP data and merge with life data
-export function loadGDPData(csvPath) {
+export function loadData(csvPath) {
     return d3.dsv(";", csvPath, processData)
-        .then(function(gdpData) {
-            let gdpMap = new Map(gdpData.map(item => [item.country, item.years]));
+        .then(function(data) {
+            let dataMap = new Map(data.map(item => [item.country, item.years]));
             lifeData.forEach(item => {
-                if (gdpMap.has(item.country)) {
-                    let gdpYears = gdpMap.get(item.country);
+                if (dataMap.has(item.country)) {
+                    let dataByYears = dataMap.get(item.country);
                     Object.keys(item.years).forEach(year => {
-                        item.years[year].gdp = gdpYears[year] ? +gdpYears[year].expec : null;
+                        item.years[year].gdp = dataByYears[year] ? +dataByYears[year].expec : null;
                     });
                 }
             });
