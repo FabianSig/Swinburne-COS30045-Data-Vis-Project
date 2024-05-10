@@ -1,14 +1,14 @@
 function init() {
-    var w = 800; 
+    var w = 800;
     var h = 600;
     var padding = 40;
 
     var svg = d3.select("#chart").append("svg")
-                 .attr("width", w)
-                 .attr("height", h);
-    
+        .attr("width", w)
+        .attr("height", h);
+
     var lifeData = []; // To store life expectancy data
-    var maxGDP = 0; 
+    var maxGDP = 0;
 
     svg.append('g')
         .attr('class', 'x-axis')
@@ -18,11 +18,12 @@ function init() {
         .attr('class', 'y-axis')
         .attr('transform', `translate(${padding},0)`);
 
-    svg.append("text")
+    // Add a text label for the year in the top right corner
+    var yearLabel = svg.append("text")
         .attr("class", "year-label")
-        .style("text-anchor", "middle")
-        .attr("x", w / 2)
-        .attr("y", h - 20); // Position adjusted for visibility
+        .style("text-anchor", "end")
+        .attr("x", w - padding)
+        .attr("y", padding);  // Positioned at the top right
 
     function processData(data) {
         let result = {
@@ -76,7 +77,7 @@ function init() {
     }
 
     function updateChart(year, label) {
-        document.getElementById('yearLabel').textContent = year; // Update the year label dynamically
+        yearLabel.text(year); // Correctly update the year in the label
         drawChart(lifeData, year, label);
     }
 
@@ -99,7 +100,7 @@ function init() {
         svg.select('.y-axis').call(d3.axisLeft(yScale).ticks(5));
 
         var circles = svg.selectAll('circle')
-            .data(filteredData, d => d.country); // Key function for object constancy
+            .data(filteredData, d => d.country);
 
         circles.enter().append('circle')
             .attr('r', 5)
@@ -115,14 +116,9 @@ function init() {
             .duration(750)
             .attr('r', 0)
             .remove();
-
-        svg.select(".year-label")
-            .text(label)
-            .attr('x', w / 2)
-            .attr('y', h - 20);
     }
 
-    loadLifeData();  // Initial load of life expectancy data
+    loadLifeData();
     document.getElementById('csvSelect').addEventListener('change', loadData);
     document.getElementById('yearSlider').addEventListener('input', function() {
         updateChart(this.value);
