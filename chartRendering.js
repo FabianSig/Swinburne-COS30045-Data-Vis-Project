@@ -40,7 +40,7 @@ function init() {
             .range([padding, w - padding]);
 
         var yScale = d3.scaleLinear()
-            .domain([60, 90])
+            .domain([40, 90])
             .range([h - padding, padding]);
 
         svg.select('.x-axis').call(d3.axisBottom(xScale).ticks(5));
