@@ -66,6 +66,24 @@ function init() {
     }
 
     function drawChart(dataForPlot, year, label) {
+        svg.selectAll("*").remove(); // Clear previous contents
+
+        let filteredData = dataForPlot.map(country => ({
+            country: country.country,
+            gdp: country.years[year] ? country.years[year].gdp : null,
+            lifeExpec: country.years[year] ? country.years[year].expec : null
+        })).filter(item => item.gdp && item.lifeExpec);
+
+        var xScale = d3.scaleLinear()
+            .domain([0, maxGDP])
+            .range([padding, w - padding]);
+
+        var yScale = d3.scaleLinear()
+            .domain([60, 90])
+            .range([h - padding, padding]);
+
+        var xAxis = d3.axisBottom(xScale).ticks(5);
+        var yAxis = d3.axisLeft(yScale).ticks(5);
 
         var tooltip = d3.select("body").append("div")
                             .attr("class", "tooltip")
@@ -119,52 +137,6 @@ function init() {
                 .style("text-anchor", "middle")
                 .text(year);
     }
-
-    function drawChart(dataForPlot, year, label) {
-    document.getElementById('yearLabel').textContent = year; // Update the year label dynamically
-
-    let filteredData = dataForPlot.map(country => ({
-        country: country.country,
-        gdp: country.years[year] ? country.years[year].gdp : null,
-        lifeExpec: country.years[year] ? country.years[year].expec : null
-    })).filter(item => item.gdp && item.lifeExpec);
-
-    var xScale = d3.scaleLinear()
-        .domain([0, maxGDP])
-        .range([padding, w - padding]);
-
-    var yScale = d3.scaleLinear()
-        .domain([60, 90])
-        .range([h - padding, padding]);
-
-    var xAxis = d3.axisBottom(xScale).ticks(5);
-    var yAxis = d3.axisLeft(yScale).ticks(5);
-
-
-    var circles = svg.selectAll('circle').data(filteredData, function(d) { return d.country; });
-
-    // Enter new elements
-    circles.enter()
-        .append('circle')
-        .attr('cx', d => xScale(d.gdp))
-        .attr('cy', d => yScale(d.lifeExpec))
-        .attr('r', 0)
-        .style('fill', 'blue')
-        .merge(circles)  // Merge new and existing elements
-        .transition()   // Apply transition to all merged elements
-        .duration(1000)
-        .attr('cx', d => xScale(d.gdp))
-        .attr('cy', d => yScale(d.lifeExpec))
-        .attr('r', 5);
-
-    // Remove exiting elements
-    circles.exit()
-        .transition()
-        .duration(1000)
-        .attr('r', 0)
-        .remove();
-}
-
 
     loadLifeData();  // Initial load of life expectancy data
     document.getElementById('csvSelect').addEventListener('change', loadData);
