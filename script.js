@@ -1,13 +1,29 @@
 function init() {
-    var w = 800; 
+    var w = 800;
     var h = 600;
     var padding = 40;
+
     var svg = d3.select("#chart").append("svg")
-                 .attr("width", w)
-                 .attr("height", h);
-    
+        .attr("width", w)
+        .attr("height", h);
+
     var lifeData = []; // To store life expectancy data
-    var maxGDP = 0; 
+    var maxGDP = 0;
+
+    svg.append('g')
+        .attr('class', 'x-axis')
+        .attr('transform', `translate(0,${h - padding})`);
+
+    svg.append('g')
+        .attr('class', 'y-axis')
+        .attr('transform', `translate(${padding},0)`);
+
+    // Add a text label for the year in the top right corner
+    var yearLabel = svg.append("text")
+        .attr("class", "year-label")
+        .style("text-anchor", "end")
+        .attr("x", w - padding)
+        .attr("y", padding);  // Positioned at the top right
 
     function processData(data) {
         let result = {
@@ -61,112 +77,48 @@ function init() {
     }
 
     function updateChart(year, label) {
-        document.getElementById('yearLabel').textContent = year; // Update the year label dynamically
+        yearLabel.text(year); // Correctly update the year in the label
         drawChart(lifeData, year, label);
     }
 
     function drawChart(dataForPlot, year, label) {
+        let filteredData = dataForPlot.map(country => ({
+            country: country.country,
+            gdp: country.years[year] ? country.years[year].gdp : null,
+            lifeExpec: country.years[year] ? country.years[year].expec : null
+        })).filter(item => item.gdp && item.lifeExpec);
 
-        var tooltip = d3.select("body").append("div")
-                            .attr("class", "tooltip")
-                            .style("opacity", 0);
+        var xScale = d3.scaleLinear()
+            .domain([0, maxGDP])
+            .range([padding, w - padding]);
 
-        svg.append('g')
-            .attr('transform', `translate(0,${h - padding})`)
-            .call(xAxis);
+        var yScale = d3.scaleLinear()
+            .domain([60, 90])
+            .range([h - padding, padding]);
 
-        svg.append('g')
-            .attr('transform', `translate(${padding},0)`)
-            .call(yAxis);
+        svg.select('.x-axis').call(d3.axisBottom(xScale).ticks(5));
+        svg.select('.y-axis').call(d3.axisLeft(yScale).ticks(5));
 
-        svg.selectAll('circle')
-            .data(filteredData)
-            .enter()
-            .append('circle')
-            .attr('cx', d => xScale(d.gdp))
-            .attr('cy', d => yScale(d.lifeExpec))
+        var circles = svg.selectAll('circle')
+            .data(filteredData, d => d.country);
+
+        circles.enter().append('circle')
             .attr('r', 5)
             .style('fill', 'blue')
-            .on('mouseover', function(event, d) {
-                tooltip.transition()
-                        .duration(200) // Time in ms to transition in
-                        .style('opacity', .9);
-                tooltip.html(d.country + "<br/> GDP: " + d.gdp + "<br/> Life Expectancy: " + d.lifeExpec)
-                        .style('left', (event.pageX + 5) + 'px')
-                        .style('top', (event.pageY - 28) + 'px');
-            })
-            .on('mouseout', function(d) {
-                tooltip.transition()
-                        .duration(500) // Time in ms to transition out
-                        .style('opacity', 0);
-            });
+            .merge(circles)
+            .transition()
+            .duration(750)
+            .attr('cx', d => xScale(d.gdp))
+            .attr('cy', d => yScale(d.lifeExpec));
 
-            svg.append("text")             
-                .attr("transform", `translate(${w / 2}, ${h - 10})`)
-                .style("text-anchor", "middle")
-                .text(label);
-
-            svg.append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 0)
-                .attr("x",0 - (h / 2))
-                .attr("dy", "1em")
-                .style("text-anchor", "middle")
-                .text("Life Expectancy (years)"); 
-
-            svg.append("text")             
-                .attr("transform", `translate(${w / 2}, ${h / 2})`)
-                .style("text-anchor", "middle")
-                .text(year);
+        circles.exit()
+            .transition()
+            .duration(750)
+            .attr('r', 0)
+            .remove();
     }
 
-    function drawChart(dataForPlot, year, label) {
-    document.getElementById('yearLabel').textContent = year; // Update the year label dynamically
-
-    let filteredData = dataForPlot.map(country => ({
-        country: country.country,
-        gdp: country.years[year] ? country.years[year].gdp : null,
-        lifeExpec: country.years[year] ? country.years[year].expec : null
-    })).filter(item => item.gdp && item.lifeExpec);
-
-    var xScale = d3.scaleLinear()
-        .domain([0, maxGDP])
-        .range([padding, w - padding]);
-
-    var yScale = d3.scaleLinear()
-        .domain([60, 90])
-        .range([h - padding, padding]);
-
-    var xAxis = d3.axisBottom(xScale).ticks(5);
-    var yAxis = d3.axisLeft(yScale).ticks(5);
-
-
-    var circles = svg.selectAll('circle').data(filteredData, function(d) { return d.country; });
-
-    // Enter new elements
-    circles.enter()
-        .append('circle')
-        .attr('cx', d => xScale(d.gdp))
-        .attr('cy', d => yScale(d.lifeExpec))
-        .attr('r', 0)
-        .style('fill', 'blue')
-        .merge(circles)  // Merge new and existing elements
-        .transition()   // Apply transition to all merged elements
-        .duration(1000)
-        .attr('cx', d => xScale(d.gdp))
-        .attr('cy', d => yScale(d.lifeExpec))
-        .attr('r', 5);
-
-    // Remove exiting elements
-    circles.exit()
-        .transition()
-        .duration(1000)
-        .attr('r', 0)
-        .remove();
-}
-
-
-    loadLifeData();  // Initial load of life expectancy data
+    loadLifeData();
     document.getElementById('csvSelect').addEventListener('change', loadData);
     document.getElementById('yearSlider').addEventListener('input', function() {
         updateChart(this.value);
