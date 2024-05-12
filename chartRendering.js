@@ -36,7 +36,7 @@ function init() {
         })).filter(item => item.gdp && item.lifeExpec);
 
         var xScale = d3.scaleLinear()
-            .domain([0, getMaxVal()])
+            .domain([0, 2000])
             .range([padding, w - padding]);
 
         var yScale = d3.scaleLinear()
