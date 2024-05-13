@@ -124,7 +124,7 @@ function init() {
             .on('mouseover', function(event, d) {
                 d3.select('#tooltip')
                     .style('visibility', 'visible')
-                    .html(`Country: ${d.country}<br>Life Expectancy: ${d.lifeExpec}<br>${xAxisLabel}: ${d.gdp}`)
+                    .html(`Country: ${d.country}<br>Life Expectancy: ${d.lifeExpec}<br>${xAxisLabel}: ${Math.round(d.gdp * 100) / 100}`)
                     .style('top', (event.pageY - 10) + 'px')
                     .style('left', (event.pageX + 10) + 'px');
             })
