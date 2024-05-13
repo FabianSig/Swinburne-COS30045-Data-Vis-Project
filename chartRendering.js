@@ -41,6 +41,7 @@ function init() {
     // Updates the chart for a specified year
     function updateChart(year) {
         yearLabel.text(year); // Update the year label
+        document.getElementById("yearLabel").innerHTML = year; //Update slider label
         drawChart(lifeData, year); // Redraw the chart with current data
     }
 
