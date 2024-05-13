@@ -7,6 +7,8 @@ function init() {
     var h = 600;
     var padding = 40;
 
+    var xAxisLabel = ""; 
+    var yAxisLabel = "Life Expectancy in years"
     // Select the chart container and append an SVG element to it
     var svg = d3.select("#chart").append("svg")
         .attr("width", w)
@@ -38,6 +40,14 @@ function init() {
         .attr("x", w - padding)
         .attr("y", padding);
 
+    svg.append("text")
+        .attr("class", "y-axis-label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 12)  
+        .attr("x", -h / 2)
+        .style("text-anchor", "middle")  
+        .text(yAxisLabel);
+
     // Updates the chart for a specified year
     function updateChart(year) {
         yearLabel.text(year); // Update the year label
@@ -47,7 +57,7 @@ function init() {
 
     // Draws the chart using filtered data for a specific year
     function drawChart(dataForPlot, year) {
-        console.log(dataForPlot)
+        
         let filteredData = dataForPlot.map(country => ({
             country: country.country,
             gdp: country.years[year] ? country.years[year].gdp : null,
@@ -96,6 +106,16 @@ function init() {
             .style('fill', 'blue')
             .style('fill', 'blue');
 
+
+        svg.selectAll("text.x-axis-label").remove();
+
+        svg.append("text")
+            .attr("class", "x-axis-label") 
+            .attr("transform", `translate(${w / 2}, ${h - 5})`)
+            .style("text-anchor", "middle")
+            .text(`${xAxisLabel} (${year})`);
+
+        
         enter.merge(update)
             .on('click', function(event, d) {
                 selectedCountry = selectedCountry === d.country ? null : d.country; // Toggle selection
@@ -129,6 +149,7 @@ function init() {
     // Event listeners for buttons to load different datasets and update chart
     document.getElementById('buttonCSV1').addEventListener('click', function () {
         var csvPath = './data/cleanedData/gdpPerCapita.csv';
+        xAxisLabel = "GDP per Capita in USD"
         setMaxVal(0); // Reset maximum value for scale
         historicalData = {}; // Reset historical data
         loadData(csvPath).then(() => {
@@ -138,6 +159,7 @@ function init() {
 
     document.getElementById('buttonCSV2').addEventListener('click', function () {
         var csvPath = './data/cleanedData/gdp.csv';
+        xAxisLabel = "GDP in Million USD"
         setMaxVal(0); // Reset maximum value for scale
         historicalData = {}; // Reset historical data
         loadData(csvPath).then(() => {
@@ -149,6 +171,8 @@ function init() {
     document.getElementById('yearSlider').addEventListener('input', function() {
         updateChart(this.value);
     });
+
+    document.getElementById('buttonCSV1').click(); //Click the button so on window reload the GDP per Capita is the default x-Axis
 }
 
 window.onload = init;
