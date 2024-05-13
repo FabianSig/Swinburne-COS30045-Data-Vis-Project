@@ -14,29 +14,6 @@ export function setMaxVal(value) {
     _maxVal = value;
 }
 
-//Processes raw data from CSV into a more structured format and updates the maximum value found
-export function processData(data) {
-    //Initialize the structure for a country's data
-    let result = {
-        country: data.Country,
-        years: {}
-    };
-    let localMax = 0; //Temporary variable to find the maximum value in the current dataset
-    //Loop over all properties in the data object
-    Object.keys(data).forEach(key => {
-        if (key !== 'Country') {
-            let value = +data[key]; //Convert the data value to a number
-            result.years[key] = { expec: value }; //Assign the value to the corresponding year
-            if (value > localMax) localMax = value; //Update local maximum if current value is higher
-        }
-    });
-
-    //If the local maximum for this dataset is higher than the global max, update the global max
-    if (localMax > _maxVal) {
-        _maxVal = localMax;
-    }
-    return result;
-}
 
 //Loads life expectancy data from a specified CSV file, processes each row, and stores it in lifeData
 export function loadLifeData() {
@@ -46,17 +23,48 @@ export function loadLifeData() {
         });
 }
 
-//Loads additional data (like GDP) from a specified CSV file and merges it with existing lifeData
+export var continentMapping = {};
+
+// Modified processData function to also parse and store continent data
+export function processData(data) {
+    // Initialize the structure for a country's data
+    let result = {
+        country: data.Country,
+        continent: data.Continent, // Assuming 'Continent' is the column name in your CSV
+        years: {}
+    };
+    let localMax = 0; // Temporary variable to find the maximum value in the current dataset
+
+    // Loop over all properties in the data object
+    Object.keys(data).forEach(key => {
+        if (key !== 'Country' && key !== 'Continent') { // Exclude Country and Continent from the year data
+            let value = +data[key]; // Convert the data value to a number
+            result.years[key] = { expec: value }; // Assign the value to the corresponding year
+            if (value > localMax) localMax = value; // Update local maximum if current value is higher
+        }
+    });
+
+    // Update global maximum value if necessary
+    if (localMax > _maxVal) {
+        _maxVal = localMax;
+    }
+    return result;
+}
+
+// Modified loadData to build continentMapping dynamically
 export function loadData(csvPath) {
-    return d3.dsv(";", csvPath, processData) //Load and process data from the CSV file
+    return d3.dsv(";", csvPath, processData)
         .then(function(data) {
-            let dataMap = new Map(data.map(item => [item.country, item.years])); //Create a map of country to data
-            //Merge the loaded data with existing lifeData
+            let dataMap = new Map(data.map(item => [item.country, item.years]));
+            data.forEach(item => {
+                continentMapping[item.country] = item.continent; // Build the continent mapping dynamically
+            });
+
+            // Merge the loaded data with existing lifeData
             lifeData.forEach(item => {
-                if (dataMap.has(item.country)) { //Check if new data exists for the country
+                if (dataMap.has(item.country)) {
                     let dataByYears = dataMap.get(item.country);
                     Object.keys(item.years).forEach(year => {
-                        //If data for the year exists, merge it, otherwise set as null
                         item.years[year].gdp = dataByYears[year] ? +dataByYears[year].expec : null;
                     });
                 }
