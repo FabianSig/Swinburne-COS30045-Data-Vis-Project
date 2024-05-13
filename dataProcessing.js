@@ -40,7 +40,7 @@ export function processData(data) {
 
 // Loads life expectancy data from a specified CSV file, processes each row, and stores it in lifeData
 export function loadLifeData() {
-    return d3.dsv(";", "./data/cleanedData/lifeExpectancy_cleaned_csv.csv", processData)
+    return d3.dsv(";", "./data/cleanedData/lifeExpectancy.csv", processData)
         .then(function(data) {
             lifeData = data; // Update the lifeData array with the processed data
         });
