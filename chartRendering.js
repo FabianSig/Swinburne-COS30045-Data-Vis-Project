@@ -25,7 +25,7 @@ function init() {
             if (!historicalData[d.country]) {
                 historicalData[d.country] = [];
             }
-            historicalData[d.country].push({ x: d.value, y: d.lifeExpec });
+            historicalData[d.country].push({ x: d.gdp, y: d.lifeExpec });
         });
     }
 
@@ -75,10 +75,16 @@ function init() {
         svg.select('.x-axis').call(d3.axisBottom(xScale).ticks(5));
         svg.select('.y-axis').call(d3.axisLeft(yScale).ticks(5));
 
-        //Lines for historical data
         var line = d3.line()
-            .x(d => xScale(d.x))
-            .y(d => yScale(d.y));
+        .x(d => {
+            console.log('X value:', d.x);  // Check what d.x is being evaluated to
+            return xScale(d.x);
+        })
+        .y(d => {
+            console.log('Y value:', d.y);  // Check what d.y is being evaluated to
+            return yScale(d.y);
+        });
+    
 
         var countries = svg.selectAll('.line')
             .data(Object.keys(historicalData), d => d);
