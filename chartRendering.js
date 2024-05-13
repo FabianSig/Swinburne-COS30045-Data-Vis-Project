@@ -121,6 +121,13 @@ function init() {
             .attr('r', 5)
             .style('fill', d => continentColors[d.continent]);
 
+        svg.selectAll("text.x-axis-label").remove();
+
+        svg.append("text")
+            .attr("class", "x-axis-label") 
+            .attr("transform", `translate(${w / 2}, ${h - 5})`)
+            .style("text-anchor", "middle")
+            .text(`${xAxisLabel} (${year})`);
 
 
         enter.merge(update)
