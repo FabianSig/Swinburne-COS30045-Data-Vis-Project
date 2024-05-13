@@ -139,7 +139,7 @@ function init() {
                 d3.select('#tooltip')
                     .style('visibility', 'visible')
                     .html(` ${isContinentView ? "Continent" : "Country"}: ${isContinentView ? d.continent : d.country}<br>
-                            Life Expectancy: ${d.lifeExpec}<br>
+                            Life Expectancy: ${Math.round(d.lifeExpec * 100) / 100}<br>
                             ${isContinentView ? "Average " : ""}${xAxisLabel}: ${Math.round(d.gdp * 100) / 100}
                         `)
                     .style('top', (event.pageY - 10) + 'px')
