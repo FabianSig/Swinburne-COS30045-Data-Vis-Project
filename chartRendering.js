@@ -1,9 +1,3 @@
-var historyStack = []
-
-export function resetHistoryStack() {
-    historyStack = [];
-}
-
 export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
     var w = 800;
     var h = 600;
@@ -24,11 +18,7 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
     svg.select('.x-axis').call(d3.axisBottom(xScale).ticks(5));
     svg.select('.y-axis').call(d3.axisLeft(yScale).ticks(5));
 
-    //drawLines(historyStack, loadedData, isContinentView, svg, xScale, yScale);
-
-    var filteredData = historyStack.flatMap(histYear =>
-        loadedData.filter(d => d.year === histYear && (isContinentView ? d.country === "N/A" : d.country !== "N/A"))
-    );
+    var filteredData = loadedData.filter(d => d.year <= year && (isContinentView ? d.country === "N/A" : d.country !== "N/A"))
 
     var countryData = d3.group(filteredData, d => isContinentView ? d.continent : d.country);
 
@@ -38,12 +28,12 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
 
     svg.selectAll(".history-line").remove();
 
-    countryData.forEach((values, country) => {
+    countryData.forEach((value, key) => {
         svg.append("path")
-            .datum(values)
+            .datum(value)
             .attr("class", "history-line")
             .attr("fill", "none")
-            .attr("stroke", "blue")
+            .attr("stroke", continentColors[value[0].continent])
             .attr("stroke-width", 2)
             .attr("d", line);
     });
@@ -105,35 +95,6 @@ export function updateChart(svg, loadedData, year, xAxisVar, xAxisLabel, isConti
 
     isContinentView ? displayData = displayData.filter(d => d.country === "N/A") : displayData = displayData.filter(d => d.country !== "N/A");
 
-    historyStack[historyStack.length - 1] < year || historyStack.length == 0 ? historyStack.push(year) : historyStack.pop();
-
-    console.log(historyStack)
-
     document.getElementById("yearLabel").innerHTML = year;
     drawChart(svg, displayData, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors);
-}
-
-function drawLines(historyStack, loadedData, isContinentView, svg, xScale, yScale, xAxisVar){
-
-    var filteredData = historyStack.flatMap(histYear =>
-        loadedData.filter(d => d.year === histYear && (isContinentView ? d.country === "N/A" : d.country !== "N/A"))
-    );
-
-    var countryData = d3.group(filteredData, d => isContinentView ? d.continent : d.country);
-
-    var line = d3.line()
-                .x(d => xScale(d.values[xAxisVar]))
-                .y(d => yScale(d.values.lifeExpec));
-
-    svg.selectAll(".history-line").remove();
-
-    countryData.forEach((values, country) => {
-        svg.append("path")
-            .datum(values)
-            .attr("class", "history-line")
-            .attr("fill", "none")
-            .attr("stroke", "blue")
-            .attr("stroke-width", 2)
-            .attr("d", line);
-    });
 }
