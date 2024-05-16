@@ -19,24 +19,15 @@ function init() {
         "Oceania": "#8c564b"
     };
 
-    var xAxisLabel = "";
+    var xAxisLabel = "GDP per Capita in USD"; //default value
     var yAxisLabel = "Life Expectancy in years";
+    var xAxisVar = "gdpPerCapita"
 
     var svg = d3.select("#chart").append("svg")
         .attr("width", w)
         .attr("height", h);
 
-    var historicalData = {};
-    var selectedCountry = null;
-
-    function updateHistoricalData(displayData) {
-        displayData.forEach(d => {
-            if (!historicalData[d.country]) {
-                historicalData[d.country] = [];
-            }
-            historicalData[d.country].push({ x: d.values.gdp, y: d.values.lifeExpec });
-        });
-    }
+    var isContinentView;
 
     svg.append('g').attr('class', 'x-axis').attr('transform', `translate(0,${h - padding})`);
     svg.append('g').attr('class', 'y-axis').attr('transform', `translate(${padding},0)`);
@@ -55,16 +46,21 @@ function init() {
         .style("text-anchor", "middle")
         .text(yAxisLabel);
 
-    function updateChart(xAxisVar, year) {
-        year = Number(year);
+    function updateChart(year) {
+        
+        year = Number(document.getElementById('yearSlider').value);
+
+        
         //filtering for the year that is getting plotted and sort so countries with bigger population are on the canvas behind smaller ones
         let displayData = loadedData.filter(d => d.year === year).sort((a, b) => b.values.population - a.values.population);
+        console.log(displayData)
         yearLabel.text(year);
         document.getElementById("yearLabel").innerHTML = year;
-        drawChart(displayData, xAxisVar, year);
+        drawChart(displayData, year);
     }
 
-    function drawChart(dataForPlot, xAxisVar, year) {
+    function drawChart(dataForPlot, year) {
+
         var xScale = d3.scaleLinear()
             .domain([0, d3.max(loadedData, d => d.values[xAxisVar])])
             .range([padding, w - padding]);
@@ -96,10 +92,6 @@ function init() {
             .text(`${xAxisLabel} (${year})`);
 
         enter.merge(update)
-            .on('click', function (event, d) {
-                selectedCountry = selectedCountry === d.country ? null : d.country;
-                drawChart(dataForPlot, xAxisVar, year);
-            })
             .on('mouseover', function (event, d) {
                 d3.select('#tooltip')
                     .style('visibility', 'visible')
@@ -132,21 +124,28 @@ function init() {
 
     loadData(currentCsvPath).then(data => {
         loadedData = data;
-        updateChart("gdpPerCapita", document.getElementById('yearSlider').value);
+        updateChart();
     }).catch(err => console.error('Error loading data:', err));
 
     document.getElementById('gdpPerCapita').addEventListener('click', function () {
         xAxisLabel = "GDP per Capita in USD";
-        updateChart("gdpPerCapita", document.getElementById('yearSlider').value);
+        xAxisVar = "gdpPerCapita";
+        updateChart();
     });
 
     document.getElementById('gdp').addEventListener('click', function () {
         xAxisLabel = "GDP in Million USD";
-        updateChart("gdp", document.getElementById('yearSlider').value);
+        xAxisVar = "gdp"
+        updateChart();
     });
 
     document.getElementById('yearSlider').addEventListener('input', function () {
-        updateChart("gdpPerCapita", this.value);
+        updateChart();
+    });
+
+    document.getElementById('toggleView').addEventListener('input', function () {
+        isContinentView = true;
+        updateChart();
     });
 }
 
