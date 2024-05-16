@@ -75,7 +75,7 @@ function init() {
     function drawChart(dataForPlot, year) {
 
         var xScale = d3.scaleLinear()
-            .domain([0, d3.max(loadedData, d => d.values[xAxisVar])])
+            .domain([0, d3.max(isContinentView ? loadedData.filter(d => d.country === "N/A") : loadedData.filter(d => d.country !== "N/A"), d => d.values[xAxisVar])])
             .range([padding, w - padding]);
         var yScale = d3.scaleLinear()
             .domain([40, 90])
@@ -111,8 +111,8 @@ function init() {
                 d3.select('#tooltip')
                     .style('visibility', 'visible')
                     .html(`${isContinentView ? `Continent: ${d.continent}` : `Country: ${d.country}`}<br>
-                           Life Expectancy: ${Math.round(d.values.lifeExpec * 100) / 100}<br>
-                           ${xAxisLabel}: ${Math.round(d.values[xAxisVar] * 100) / 100}
+                           ${isContinentView ? 'Average' : ''} Life Expectancy: ${Math.round(d.values.lifeExpec * 100) / 100}<br>
+                           ${isContinentView ? 'Average' : ''} ${xAxisLabel}: ${Math.round(d.values[xAxisVar] * 100) / 100}
                         `)
                     .style('top', (event.pageY - 10) + 'px')
                     .style('left', (event.pageX + 10) + 'px');
