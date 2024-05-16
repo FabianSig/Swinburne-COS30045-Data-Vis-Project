@@ -1,3 +1,5 @@
+var historyStack = []
+
 export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
     var w = 800;
     var h = 600;
@@ -63,20 +65,54 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
         .duration(750)
         .attr('r', 0)
         .remove();
+
+        var countryData = {};
+
+    historyStack.forEach(histYear => {
+        var yearData = loadedData.filter(d => d.year === histYear).filter(d => isContinentView ? d.country === "N/A" : d.country !== "N/A");
+        yearData.forEach(d => {
+            if (!countryData[d.country]) {
+                countryData[d.country] = [];
+            }
+            countryData[d.country].push({
+                x: d.values[xAxisVar],
+                y: d.values.lifeExpec,
+                year: d.year
+            });
+        });
+    });
+
+    console.log(countryData)
+
+    var line = d3.line()
+        .x(d => xScale(d.x))
+        .y(d => yScale(d.y));
+
+    svg.selectAll(".history-line").remove();  // Remove any existing lines before drawing new ones
+
+    Object.keys(countryData).forEach(country => {
+        svg.append("path")
+            .datum(countryData[country])
+            .attr("class", "history-line")
+            .attr("fill", "none")
+            .attr("stroke", "blue")
+            .attr("stroke-width", 2)
+            .attr("d", line);
+    });
 }
 
 export function updateChart(svg, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
+
     year = Number(document.getElementById('yearSlider').value);
-
-
 
     let displayData = loadedData.filter(d => d.year === year).sort((a, b) => b.values.population - a.values.population);
 
-    if (isContinentView) {
-        displayData = displayData.filter(d => d.country === "N/A");
-    } else {
-        displayData = displayData.filter(d => d.country !== "N/A");
-    }
+    isContinentView ? displayData = displayData.filter(d => d.country === "N/A") : displayData = displayData.filter(d => d.country !== "N/A");
+
+
+    historyStack[historyStack.length - 1] < year || historyStack.length == 0 ? historyStack.push(year) : historyStack.pop();
+
+    console.log(historyStack)
 
     document.getElementById("yearLabel").innerHTML = year;
     drawChart(svg, displayData, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors);
