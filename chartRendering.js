@@ -22,12 +22,12 @@ function init() {
     var xAxisLabel = "GDP per Capita in USD"; //default value
     var yAxisLabel = "Life Expectancy in years";
     var xAxisVar = "gdpPerCapita"
+    var isContinentView = false;
 
     var svg = d3.select("#chart").append("svg")
         .attr("width", w)
         .attr("height", h);
 
-    var isContinentView;
 
     svg.append('g').attr('class', 'x-axis').attr('transform', `translate(0,${h - padding})`);
     svg.append('g').attr('class', 'y-axis').attr('transform', `translate(${padding},0)`);
@@ -50,9 +50,20 @@ function init() {
         
         year = Number(document.getElementById('yearSlider').value);
 
-        
         //filtering for the year that is getting plotted and sort so countries with bigger population are on the canvas behind smaller ones
         let displayData = loadedData.filter(d => d.year === year).sort((a, b) => b.values.population - a.values.population);
+        console.log(isContinentView)
+        console.log(displayData)
+        
+        if(isContinentView){
+            displayData = displayData.filter(d => d.country === "N/A")
+        }
+        else{
+             displayData = displayData.filter(d => d.country !== "N/A")
+        }
+
+        console.log(displayData)
+
         console.log(displayData)
         yearLabel.text(year);
         document.getElementById("yearLabel").innerHTML = year;
@@ -143,8 +154,8 @@ function init() {
         updateChart();
     });
 
-    document.getElementById('toggleView').addEventListener('input', function () {
-        isContinentView = true;
+    document.getElementById('toggleView').addEventListener('click', function () {
+        isContinentView = !isContinentView;
         updateChart();
     });
 }
