@@ -1,8 +1,16 @@
-import {loadData} from './dataProcessing.js';
-
+import { loadData } from './dataProcessing.js';
 
 let loadedData = []; // Object to store loaded data (changed to array)
 let currentCsvPath = './data/cleanedData/merged_data.csv'; // Default CSV path
+
+// Debounce function to limit the rate at which updateChart is called
+function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
 
 // Entry point for the script, executed when the document has loaded
 function init() {
@@ -28,7 +36,6 @@ function init() {
         .attr("width", w)
         .attr("height", h);
 
-
     svg.append('g').attr('class', 'x-axis').attr('transform', `translate(0,${h - padding})`);
     svg.append('g').attr('class', 'y-axis').attr('transform', `translate(${padding},0)`);
 
@@ -52,8 +59,6 @@ function init() {
 
         //filtering for the year that is getting plotted and sort so countries with bigger population are on the canvas behind smaller ones
         let displayData = loadedData.filter(d => d.year === year).sort((a, b) => b.values.population - a.values.population);
-        console.log(isContinentView)
-        console.log(displayData)
         
         if(isContinentView){
             displayData = displayData.filter(d => d.country === "N/A")
@@ -62,16 +67,13 @@ function init() {
              displayData = displayData.filter(d => d.country !== "N/A")
         }
 
-        console.log(displayData)
-
-        console.log(displayData)
         yearLabel.text(year);
         document.getElementById("yearLabel").innerHTML = year;
         drawChart(displayData, year);
     }
 
     function drawChart(dataForPlot, year) {
-        console.log(d3.max(loadedData, d => d.values[xAxisVar]))
+
         var xScale = d3.scaleLinear()
             .domain([0, d3.max(loadedData, d => d.values[xAxisVar])])
             .range([padding, w - padding]);
@@ -150,14 +152,12 @@ function init() {
         updateChart();
     });
 
-    document.getElementById('yearSlider').addEventListener('input', function () {
-        updateChart();
-    });
-
     document.getElementById('toggleView').addEventListener('click', function () {
         isContinentView = !isContinentView;
         updateChart();
     });
+
+    document.getElementById('yearSlider').addEventListener('input', debounce(updateChart, 1));
 }
 
 window.onload = init;
