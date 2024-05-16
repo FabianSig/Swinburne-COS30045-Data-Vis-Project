@@ -71,7 +71,7 @@ function init() {
     }
 
     function drawChart(dataForPlot, year) {
-
+        console.log(d3.max(loadedData, d => d.values[xAxisVar]))
         var xScale = d3.scaleLinear()
             .domain([0, d3.max(loadedData, d => d.values[xAxisVar])])
             .range([padding, w - padding]);
@@ -79,34 +79,36 @@ function init() {
             .domain([40, 90])
             .range([h - padding, padding]);
         var rScale = d3.scaleLinear()
-            .domain([0, d3.max(loadedData, d => d.values.population)])
+            .domain([0, d3.max(dataForPlot, d => d.values.population)])
             .range([5, 20]);
-
+    
         svg.select('.x-axis').call(d3.axisBottom(xScale).ticks(5));
         svg.select('.y-axis').call(d3.axisLeft(yScale).ticks(5));
-
+    
         var update = svg.selectAll('circle')
             .data(dataForPlot, d => d.country);
-
+    
         var enter = update.enter()
             .append('circle')
             .attr('class', 'node')
-            .attr('r', 5)
-            .style('fill', d => continentColors[d.continent]);
-
+            .attr('r', 0)
+            .style('fill', d => continentColors[d.continent])
+            .style('stroke', 'black')
+            .style('stroke-width', 1);
+    
         svg.selectAll("text.x-axis-label").remove();
-
+    
         svg.append("text")
             .attr("class", "x-axis-label")
             .attr("transform", `translate(${w / 2}, ${h - 5})`)
             .style("text-anchor", "middle")
             .text(`${xAxisLabel} (${year})`);
-
+    
         enter.merge(update)
             .on('mouseover', function (event, d) {
                 d3.select('#tooltip')
                     .style('visibility', 'visible')
-                    .html(`Country: ${d.country}<br>
+                    .html(`${isContinentView ? `Continent: ${d.continent}` : `Country: ${d.country}`}<br>
                            Life Expectancy: ${Math.round(d.values.lifeExpec * 100) / 100}<br>
                            ${xAxisLabel}: ${Math.round(d.values[xAxisVar] * 100) / 100}
                         `)
@@ -118,20 +120,18 @@ function init() {
             })
             .transition()
             .duration(750)
+            .attr('r', d => rScale(d.values.population))
             .attr('cx', d => xScale(d.values[xAxisVar]))
             .attr('cy', d => yScale(d.values.lifeExpec))
-            .attr('r', d => rScale(d.values.population))
-            .attr('fill', d => continentColors[d.continent])
-            .style('stroke', 'black')
-            .style('stroke-width', 1);
-
-
+            .style('fill', d => continentColors[d.continent]);
+    
         update.exit()
             .transition()
             .duration(750)
             .attr('r', 0)
             .remove();
     }
+    
 
     loadData(currentCsvPath).then(data => {
         loadedData = data;
@@ -145,7 +145,7 @@ function init() {
     });
 
     document.getElementById('gdp').addEventListener('click', function () {
-        xAxisLabel = "GDP in Million USD";
+        xAxisLabel = "GDP in Billion USD";
         xAxisVar = "gdp"
         updateChart();
     });
