@@ -56,8 +56,9 @@ function init() {
         .text(yAxisLabel);
 
     function updateChart(xAxisVar, year) {
-        year = Number(year); // Ensure the year is a number
-        let displayData = loadedData.filter(d => d.year === year);
+        year = Number(year);
+        //filtering for the year that is getting plotted and sort so countries with bigger population are on the canvas behind smaller ones
+        let displayData = loadedData.filter(d => d.year === year).sort((a, b) => b.values.population - a.values.population);
         yearLabel.text(year);
         document.getElementById("yearLabel").innerHTML = year;
         drawChart(displayData, xAxisVar, year);
@@ -65,11 +66,14 @@ function init() {
 
     function drawChart(dataForPlot, xAxisVar, year) {
         var xScale = d3.scaleLinear()
-            .domain([0, 50000])
+            .domain([0, d3.max(loadedData, d => d.values[xAxisVar])])
             .range([padding, w - padding]);
         var yScale = d3.scaleLinear()
             .domain([40, 90])
             .range([h - padding, padding]);
+        var rScale = d3.scaleLinear()
+            .domain([0, d3.max(loadedData, d => d.values.population)])
+            .range([5, 20]);
 
         svg.select('.x-axis').call(d3.axisBottom(xScale).ticks(5));
         svg.select('.y-axis').call(d3.axisLeft(yScale).ticks(5));
@@ -111,9 +115,13 @@ function init() {
             })
             .transition()
             .duration(750)
-            .attr('cx', d => xScale(parseFloat(d.values[xAxisVar])))
-            .attr('cy', d => yScale(parseFloat(d.values.lifeExpec)))
-            .attr('fill', d => continentColors[d.continent]);
+            .attr('cx', d => xScale(d.values[xAxisVar]))
+            .attr('cy', d => yScale(d.values.lifeExpec))
+            .attr('r', d => rScale(d.values.population))
+            .attr('fill', d => continentColors[d.continent])
+            .style('stroke', 'black')
+            .style('stroke-width', 1);
+
 
         update.exit()
             .transition()
