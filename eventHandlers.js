@@ -1,5 +1,5 @@
 import { loadData } from './dataProcessing.js';
-import { drawChart, updateChart } from './chartRendering.js';
+import { drawChart, updateChart, resetHistoryStack} from './chartRendering.js';
 
 let loadedData = [];
 let currentCsvPath = './data/cleanedData/merged_data.csv';
@@ -61,12 +61,14 @@ function init() {
     document.getElementById('gdpPerCapita').addEventListener('click', function () {
         xAxisLabel = "GDP per Capita in USD";
         xAxisVar = "gdpPerCapita";
+        resetHistoryStack();
         updateChart(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
     });
 
     document.getElementById('gdp').addEventListener('click', function () {
         xAxisLabel = "GDP in Billion USD";
         xAxisVar = "gdp";
+        resetHistoryStack();
         updateChart(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
     });
 
@@ -76,6 +78,7 @@ function init() {
 
     document.getElementById('toggleView').addEventListener('click', function () {
         isContinentView = !isContinentView;
+        resetHistoryStack();
         updateChart(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
     });
 }

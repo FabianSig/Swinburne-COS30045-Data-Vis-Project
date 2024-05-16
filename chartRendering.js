@@ -1,5 +1,9 @@
 var historyStack = []
 
+export function resetHistoryStack() {
+    historyStack = [];
+}
+
 export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
     var w = 800;
     var h = 600;
@@ -19,6 +23,30 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
 
     svg.select('.x-axis').call(d3.axisBottom(xScale).ticks(5));
     svg.select('.y-axis').call(d3.axisLeft(yScale).ticks(5));
+
+    //drawLines(historyStack, loadedData, isContinentView, svg, xScale, yScale);
+
+    var filteredData = historyStack.flatMap(histYear =>
+        loadedData.filter(d => d.year === histYear && (isContinentView ? d.country === "N/A" : d.country !== "N/A"))
+    );
+
+    var countryData = d3.group(filteredData, d => isContinentView ? d.continent : d.country);
+
+    var line = d3.line()
+                .x(d => xScale(d.values[xAxisVar]))
+                .y(d => yScale(d.values.lifeExpec));
+
+    svg.selectAll(".history-line").remove();
+
+    countryData.forEach((values, country) => {
+        svg.append("path")
+            .datum(values)
+            .attr("class", "history-line")
+            .attr("fill", "none")
+            .attr("stroke", "blue")
+            .attr("stroke-width", 2)
+            .attr("d", line);
+    });
 
     var update = svg.selectAll('circle')
         .data(dataForPlot, d => isContinentView ? d.continent : d.country);
@@ -66,39 +94,7 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
         .attr('r', 0)
         .remove();
 
-        var countryData = {};
-
-    historyStack.forEach(histYear => {
-        var yearData = loadedData.filter(d => d.year === histYear).filter(d => isContinentView ? d.country === "N/A" : d.country !== "N/A");
-        yearData.forEach(d => {
-            if (!countryData[d.country]) {
-                countryData[d.country] = [];
-            }
-            countryData[d.country].push({
-                x: d.values[xAxisVar],
-                y: d.values.lifeExpec,
-                year: d.year
-            });
-        });
-    });
-
-    console.log(countryData)
-
-    var line = d3.line()
-        .x(d => xScale(d.x))
-        .y(d => yScale(d.y));
-
-    svg.selectAll(".history-line").remove();  // Remove any existing lines before drawing new ones
-
-    Object.keys(countryData).forEach(country => {
-        svg.append("path")
-            .datum(countryData[country])
-            .attr("class", "history-line")
-            .attr("fill", "none")
-            .attr("stroke", "blue")
-            .attr("stroke-width", 2)
-            .attr("d", line);
-    });
+    svg.selectAll('circle').raise();
 }
 
 export function updateChart(svg, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
@@ -109,11 +105,35 @@ export function updateChart(svg, loadedData, year, xAxisVar, xAxisLabel, isConti
 
     isContinentView ? displayData = displayData.filter(d => d.country === "N/A") : displayData = displayData.filter(d => d.country !== "N/A");
 
-
     historyStack[historyStack.length - 1] < year || historyStack.length == 0 ? historyStack.push(year) : historyStack.pop();
 
     console.log(historyStack)
 
     document.getElementById("yearLabel").innerHTML = year;
     drawChart(svg, displayData, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors);
+}
+
+function drawLines(historyStack, loadedData, isContinentView, svg, xScale, yScale, xAxisVar){
+
+    var filteredData = historyStack.flatMap(histYear =>
+        loadedData.filter(d => d.year === histYear && (isContinentView ? d.country === "N/A" : d.country !== "N/A"))
+    );
+
+    var countryData = d3.group(filteredData, d => isContinentView ? d.continent : d.country);
+
+    var line = d3.line()
+                .x(d => xScale(d.values[xAxisVar]))
+                .y(d => yScale(d.values.lifeExpec));
+
+    svg.selectAll(".history-line").remove();
+
+    countryData.forEach((values, country) => {
+        svg.append("path")
+            .datum(values)
+            .attr("class", "history-line")
+            .attr("fill", "none")
+            .attr("stroke", "blue")
+            .attr("stroke-width", 2)
+            .attr("d", line);
+    });
 }
