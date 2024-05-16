@@ -1,10 +1,10 @@
-export function drawChart(svg, dataForPlot, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
+export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
     var w = 800;
     var h = 600;
     var padding = 40;
 
     var xScale = d3.scaleLinear()
-        .domain([0, d3.max(isContinentView ? dataForPlot.filter(d => d.country === "N/A") : dataForPlot.filter(d => d.country !== "N/A"), d => d.values[xAxisVar])])
+        .domain([0, d3.max(isContinentView ? loadedData.filter(d => d.country === "N/A") : loadedData.filter(d => d.country !== "N/A"), d => d.values[xAxisVar])])
         .range([padding, w - padding]);
 
     var yScale = d3.scaleLinear()
@@ -68,6 +68,8 @@ export function drawChart(svg, dataForPlot, year, xAxisVar, xAxisLabel, isContin
 export function updateChart(svg, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
     year = Number(document.getElementById('yearSlider').value);
 
+
+
     let displayData = loadedData.filter(d => d.year === year).sort((a, b) => b.values.population - a.values.population);
 
     if (isContinentView) {
@@ -77,5 +79,5 @@ export function updateChart(svg, loadedData, year, xAxisVar, xAxisLabel, isConti
     }
 
     document.getElementById("yearLabel").innerHTML = year;
-    drawChart(svg, displayData, year, xAxisVar, xAxisLabel, isContinentView, continentColors);
+    drawChart(svg, displayData, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors);
 }
