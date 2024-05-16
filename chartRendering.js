@@ -86,7 +86,7 @@ function init() {
         svg.select('.y-axis').call(d3.axisLeft(yScale).ticks(5));
     
         var update = svg.selectAll('circle')
-            .data(dataForPlot, d => d.country);
+            .data(dataForPlot, d => isContinentView ? d.continent : d.country);
     
         var enter = update.enter()
             .append('circle')
