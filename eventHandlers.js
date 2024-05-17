@@ -15,7 +15,7 @@ function debounce(func, wait) {
 function populateCountryCheckboxes(loadedData, isContinentView) {
     const container = document.getElementById('countryCheckboxes');
     if (!container) return;
-    container.innerHTML = ''; // Clear any existing checkboxes
+    container.innerHTML = '';
     const countries = isContinentView
         ? [...new Set(loadedData.filter(d => d.country === "N/A").map(d => d.continent))]
         : [...new Set(loadedData.filter(d => d.country !== "N/A").map(d => d.country))];
@@ -29,7 +29,7 @@ function populateCountryCheckboxes(loadedData, isContinentView) {
         checkbox.value = country;
         checkbox.id = `checkbox-${country}`;
         checkbox.classList.add('country-checkbox');
-        checkbox.checked = true; // Check the checkbox by default
+        checkbox.checked = true;
 
         const label = document.createElement('label');
         label.htmlFor = `checkbox-${country}`;
