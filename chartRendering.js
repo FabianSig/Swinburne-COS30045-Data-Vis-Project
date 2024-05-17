@@ -170,6 +170,11 @@ function updateHighlightedContinent(continent, svg){
                 .transition()
                 .duration(750)
                 .style('opacity', 1);
+                
+        svg.selectAll('.legend-item')
+                .transition()
+                .duration(750)
+                .style('opacity', 1);
 
         highlightedContinent = ""
     }
@@ -178,16 +183,17 @@ function updateHighlightedContinent(continent, svg){
         svg.selectAll('.node')
                 .transition()
                 .duration(750)
-                .style('opacity', function(nodeData) {
-                    return nodeData.continent === continent ? 1 : 0.1;
-                });
+                .style('opacity', d => d.continent === continent ? 1 : 0.1);
 
-            svg.selectAll('.history-line')
-                .transition()
-                .duration(750)
-                .style('opacity', function(lineData) {
-                    return lineData[0].continent === continent ? 1 : 0.1;
-                });
+        svg.selectAll('.history-line')
+            .transition()
+            .duration(750)
+            .style('opacity', d => d[0].continent === continent ? 1 : 0.1);
+
+        d3.selectAll('.legend-item')
+            .transition()
+            .duration(750)
+            .style('opacity', d => d === continent ? 1 : 0.3);
         
         highlightedContinent = continent;
     }
