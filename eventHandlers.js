@@ -113,12 +113,14 @@ function init() {
         document.getElementById('gdpPerCapita').addEventListener('click', function () {
             xAxisLabel = "GDP per Capita in USD";
             xAxisVar = "gdpPerCapita";
+            updateActiveButton(this);
             updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
         });
 
         document.getElementById('gdp').addEventListener('click', function () {
             xAxisLabel = "GDP in Billion USD";
             xAxisVar = "gdp";
+            updateActiveButton(this);
             updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
         });
 
@@ -142,6 +144,13 @@ function init() {
             updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
         });
     }).catch(err => console.error('Error loading data:', err));
+}
+
+function updateActiveButton(button){
+    document.querySelectorAll('.x-Axis-button').forEach(element => {
+        element.style.backgroundColor = "#ffffff";
+    });
+    button.style.backgroundColor = "#dbe5f0";
 }
 
 window.onload = init;

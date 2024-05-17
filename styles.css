@@ -94,12 +94,8 @@ body {
 .scrollbox {
     max-height: 400px;
     overflow-y: auto;
-    border: 1px solid #ccc;
     padding: 10px;
     width: 200px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Custom scrollbar styles */
@@ -126,7 +122,7 @@ body {
 }
 
 #countryCheckboxesContainer input[type="checkbox"] {
-    margin-right: 10px;
+    padding-right: 16px;
 }
 
 #checkAllContainer {
@@ -144,6 +140,8 @@ body {
 .country-checkbox-wrapper {
     display: flex;
     align-items: center;
+    border-top: 1px solid #c0c0c0;
+    padding: 8px 18px 5px 25px;
 }
 
 .country-checkbox-wrapper label:hover {
@@ -166,24 +164,44 @@ body {
 .legend-text {
     font-size: 14px;
 }
-
+/* Base button styles */
 button {
     width: 130px;
     text-align: center;
     background-color: #ffffff;
     border-radius: 5px;
-    border-width: 2px;
-    border-color: #e7e7e7;
+    border-width: 1px;
+    border-color: #969696cb;
     border-style: solid;
     padding: 5px;
     margin: 5px;
+    position: relative;
+    box-shadow: inset 0 0 0 1px #fff;
+    background-clip: padding-box;
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
+
+
 
 button:hover{
     background-color: #f0f0f0;
     cursor:pointer;
 }
 
-.country-checkbox {
-    
+x-Axis-button:pressed{
+    background-color: #dbe5f0;
 }
+
+input[type="checkbox"] {
+    appearance: none;
+    background-color: #fff;
+    margin: 0;
+    font: inherit;
+    color: currentColor;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #969696cb;
+    border-radius: 0.15em;
+    transform: translateY(-0.075em);
+    margin-right: 10px;
+  }
