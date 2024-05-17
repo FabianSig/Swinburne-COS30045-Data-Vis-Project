@@ -21,20 +21,26 @@ function populateCountryCheckboxes(loadedData, isContinentView) {
         : [...new Set(loadedData.filter(d => d.country !== "N/A").map(d => d.country))];
 
     countries.sort().forEach(country => {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('country-checkbox-wrapper');
+
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.value = country;
         checkbox.id = `checkbox-${country}`;
         checkbox.classList.add('country-checkbox');
         checkbox.checked = true; // Check the checkbox by default
+
         const label = document.createElement('label');
         label.htmlFor = `checkbox-${country}`;
         label.textContent = country;
-        container.appendChild(checkbox);
-        container.appendChild(label);
-        container.appendChild(document.createElement('br'));
+
+        wrapper.appendChild(checkbox);
+        wrapper.appendChild(label);
+        container.appendChild(wrapper);
     });
 }
+
 
 function getSelectedCountries() {
     const checkboxes = document.querySelectorAll('.country-checkbox:checked');

@@ -17,6 +17,7 @@ body {
 }
 
 .toolbar {
+    width: 18%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -31,6 +32,7 @@ body {
     align-items: center;
     padding: 20px;
     position: relative;
+    margin: 0 auto;
 }
 
 #chart {
@@ -38,14 +40,15 @@ body {
     height: 480px;
 }
 
-.tooltip {
+#tooltip {
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.75);
-    color: #fff;
-    padding: 5px;
-    border-radius: 4px;
-    pointer-events: none;
     visibility: hidden;
+    padding: 10px;
+    background: white;
+    border: 1px solid #000;
+    border-radius: 5px;
+    pointer-events: none;
+    z-index: 100;
 }
 
 #yearLabel {
@@ -59,9 +62,60 @@ body {
 }
 
 .scrollbox {
-    max-height: 200px;
-    overflow-y: scroll;
+    max-height: 400px;
+    overflow-y: auto;
     border: 1px solid #ccc;
-    padding: 5px;
+    padding: 10px;
     width: 200px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom scrollbar styles */
+.scrollbox::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollbox::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+}
+
+.scrollbox::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 8px;
+}
+
+.scrollbox::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+#countryCheckboxesContainer label {
+    cursor: pointer;
+}
+
+#countryCheckboxesContainer input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+#checkAllContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#countryCheckboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.country-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.country-checkbox-wrapper label:hover {
+    color: #007BFF;
 }
