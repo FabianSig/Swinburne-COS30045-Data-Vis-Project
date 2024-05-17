@@ -90,9 +90,15 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
                     `)
                 .style('top', (event.pageY - 10) + 'px')
                 .style('left', (event.pageX + 10) + 'px');
+            d3.select(this)
+                .style('cursor', 'pointer')
+                .attr('stroke-width', 2);
         })
         .on('mouseout', function () {
             d3.select('#tooltip').style('visibility', 'hidden');
+            d3.select(this)
+                .style('cursor', 'default') 
+                .attr('stroke-width', 1);
         })
         .on('click', (d, e) => updateHighlightedContinent(e.continent, svg))
         .transition()
