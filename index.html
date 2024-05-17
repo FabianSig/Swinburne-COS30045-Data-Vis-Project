@@ -20,11 +20,17 @@
             <button id="gdpPerCapita">GDP Per Capita</button>
             <button id="gdp">GDP</button>
             <button id="toggleView">Toggle View</button>
-            <input type="range" id="yearSlider" min="1980" max="2021" value="1980">
-            <label for="yearSlider" id="yearLabel">1980</label>
         </div>
         <div id="chart-container">
             <div id="chart"></div> <!-- Container for the D3 chart -->
+            <div id="slider-container">
+                <div id="slider-container">
+                    <div class="slider-value-box" id="minValueBox">1980</div>
+                    <input type="range" id="yearSlider" min="1980" max="2021" value="1980">
+                    <div class="slider-value-box" id="maxValueBox">2021</div>
+                </div>
+                
+            </div>
         </div>
         <div id="right-toolbar" class="toolbar">
             <div id="countryCheckboxesContainer">
@@ -40,11 +46,6 @@
     </div>
 
     <div id="tooltip" class="tooltip"></div>    
-
-    <footer style="color:grey; text-align: center">
-        COS30045 Data Visualisation <br>
-        Fabian Sigmund, Vasudevan Karthikeyan 
-    </footer>
 
     <script type="module" src="./eventHandlers.js"></script>
 </body>

@@ -112,6 +112,5 @@ export function updateChart(svg, loadedData, year, xAxisVar, xAxisLabel, isConti
 
     isContinentView ? displayData = displayData.filter(d => d.country === "N/A") : displayData = displayData.filter(d => d.country !== "N/A");
 
-    document.getElementById("yearLabel").innerHTML = year;
     drawChart(svg, displayData, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors);
 }

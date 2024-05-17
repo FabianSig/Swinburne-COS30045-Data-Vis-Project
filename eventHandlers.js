@@ -62,7 +62,6 @@ function updateChartBasedOnCountrySelection(svg, loadedData, year, xAxisVar, xAx
         displayData = displayData.filter(d => d.country !== "N/A" && selectedCountries.includes(d.country));
     }
 
-    document.getElementById("yearLabel").innerHTML = year;
     drawChart(svg, displayData, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors);
 }
 
