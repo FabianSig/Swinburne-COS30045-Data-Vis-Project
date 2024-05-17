@@ -18,7 +18,7 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
     svg.select('.x-axis').call(d3.axisBottom(xScale).ticks(5));
     svg.select('.y-axis').call(d3.axisLeft(yScale).ticks(5));
 
-    var filteredData = loadedData.filter(d => d.year <= year && (isContinentView ? d.country === "N/A" : d.country !== "N/A"))
+    var filteredData = loadedData.filter(d => d.year <= year && (isContinentView ? d.country === "N/A" : d.country !== "N/A"));
 
     var countryData = d3.group(filteredData, d => isContinentView ? d.continent : d.country);
 
@@ -26,17 +26,30 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
                 .x(d => xScale(d.values[xAxisVar]))
                 .y(d => yScale(d.values.lifeExpec));
 
-    svg.selectAll(".history-line").remove();
+    var lines = svg.selectAll(".history-line")
+        .data(Array.from(countryData.values()), d => d[0].continent || d[0].country);
 
-    countryData.forEach((value, key) => {
-        svg.append("path")
-            .datum(value)
-            .attr("class", "history-line")
-            .attr("fill", "none")
-            .attr("stroke", continentColors[value[0].continent])
-            .attr("stroke-width", 2)
-            .attr("d", line);
-    });
+    lines.enter()
+        .append("path")
+        .attr("class", "history-line")
+        .attr("fill", "none")
+        .attr("stroke", d => continentColors[d[0].continent])
+        .attr("stroke-width", 2)
+        .attr("d", line)
+        .style("opacity", 0)
+        .transition()
+        .duration(750)
+        .style("opacity", 1);
+
+    lines.transition()
+        .duration(750)
+        .attr("d", line);
+
+    lines.exit()
+        .transition()
+        .duration(750)
+        .style("opacity", 0)
+        .remove();
 
     var update = svg.selectAll('circle')
         .data(dataForPlot, d => isContinentView ? d.continent : d.country);
