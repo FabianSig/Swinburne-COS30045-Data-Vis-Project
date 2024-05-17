@@ -101,7 +101,6 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
 }
 
 export function updateChart(svg, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
-
     year = Number(document.getElementById('yearSlider').value);
 
     let displayData = loadedData.filter(d => d.year === year).sort((a, b) => b.values.population - a.values.population);

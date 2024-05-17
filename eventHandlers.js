@@ -1,5 +1,5 @@
 import { loadData } from './dataProcessing.js';
-import { drawChart, updateChart} from './chartRendering.js';
+import { drawChart, updateChart } from './chartRendering.js';
 
 let loadedData = [];
 let currentCsvPath = './data/cleanedData/merged_data.csv';
@@ -12,8 +12,37 @@ function debounce(func, wait) {
     };
 }
 
+function populateCountryDropdown(loadedData, isContinentView) {
+    var dropdown = document.getElementById('countryDropdown');
+    var countries = isContinentView
+        ? [...new Set(loadedData.filter(d => d.country === "N/A").map(d => d.continent))]
+        : [...new Set(loadedData.filter(d => d.country !== "N/A").map(d => d.country))];
+
+    countries.sort().forEach(country => {
+        var option = document.createElement('option');
+        option.value = country;
+        option.text = country;
+        dropdown.add(option);
+    });
+}
+
+function updateChartBasedOnCountry(svg, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors, selectedCountry) {
+    year = Number(document.getElementById('yearSlider').value);
+
+    let displayData = loadedData.filter(d => d.year === year)
+                                .sort((a, b) => b.values.population - a.values.population);
+
+    if (isContinentView) {
+        displayData = displayData.filter(d => d.country === "N/A" && (selectedCountry === "all" || d.continent === selectedCountry));
+    } else {
+        displayData = displayData.filter(d => d.country !== "N/A" && (selectedCountry === "all" || d.country === selectedCountry));
+    }
+
+    document.getElementById("yearLabel").innerHTML = year;
+    drawChart(svg, displayData, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors);
+}
+
 function init() {
-    
     var w = 640;
     var h = 480;
     var padding = 36;
@@ -55,6 +84,7 @@ function init() {
 
     loadData(currentCsvPath).then(data => {
         loadedData = data;
+        populateCountryDropdown(loadedData, isContinentView);
         updateChart(svg, loadedData, 1980, xAxisVar, xAxisLabel, isContinentView, continentColors);
     }).catch(err => console.error('Error loading data:', err));
 
@@ -71,12 +101,17 @@ function init() {
     });
 
     document.getElementById('yearSlider').addEventListener('input', debounce(function () {
-        updateChart(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+        updateChartBasedOnCountry(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors, document.getElementById('countryDropdown').value);
     }, 100));
 
     document.getElementById('toggleView').addEventListener('click', function () {
         isContinentView = !isContinentView;
-        updateChart(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+        populateCountryDropdown(loadedData, isContinentView);
+        updateChartBasedOnCountry(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors, document.getElementById('countryDropdown').value);
+    });
+
+    document.getElementById('countryDropdown').addEventListener('change', function () {
+        updateChartBasedOnCountry(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors, this.value);
     });
 }
 
