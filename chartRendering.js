@@ -83,8 +83,8 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
                        ${isContinentView ? 'Average' : ''} Life Expectancy: ${Math.round(d.values.lifeExpec * 100) / 100}<br>
                        ${isContinentView ? 'Average' : ''} ${xAxisLabel}: ${Math.round(d.values[xAxisVar] * 100) / 100}
                     `)
-                .style('top', (event.pageY) + 'px')
-                .style('left', (event.pageX) + 'px');
+                .style('top', (event.pageY - 10) + 'px')
+                .style('left', (event.pageX + 10) + 'px');
         })
         .on('mouseout', function () {
             d3.select('#tooltip').style('visibility', 'hidden');
