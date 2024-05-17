@@ -12,13 +12,18 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
         .range([h - padding, padding]);
 
     var rScale = d3.scaleLinear()
-        .domain([0, d3.max(dataForPlot, d => d.values.population)])
+        .domain([0, d3.max(loadedData.filter(d => d.year === year), d => d.values.population)])
         .range([5, 20]);
 
     svg.select('.x-axis').call(d3.axisBottom(xScale).ticks(5));
     svg.select('.y-axis').call(d3.axisLeft(yScale).ticks(5));
 
-    var filteredData = loadedData.filter(d => d.year <= year && (isContinentView ? d.country === "N/A" : d.country !== "N/A"));
+    var selectedCountries = new Set(dataForPlot.map(d => isContinentView ? d.continent : d.country));
+
+    var filteredData = loadedData.filter(d => d.year <= year 
+                                            && (isContinentView ? d.country === "N/A" : d.country !== "N/A")
+                                            && selectedCountries.has(isContinentView ? d.continent : d.country)
+                                        );
 
     var countryData = d3.group(filteredData, d => isContinentView ? d.continent : d.country);
 

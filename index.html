@@ -2,54 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"       content="width=device-width, initial-scale=1.0">
-    <meta name="description"    content="Data Visualisation Project"/>
-    <meta name="keywords"       content="HTML, CSS, D3"/>
-    <meta name="author"         content="Fabian Sigmund, Vasudevan Karthikeyan"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Data Visualisation Project"/>
+    <meta name="keywords" content="HTML, CSS, D3"/>
+    <meta name="author" content="Fabian Sigmund, Vasudevan Karthikeyan"/>
 
     <title>Data Visualisation Project</title>
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script type="module" src="./dataProcessing.js"></script>
-    <script type="module" src="./chartRendering.js"></script>
-    <script type="module" src="./eventHandlers.js"></script>
-
-
     <link rel="stylesheet" href="styles.css">
-    
 </head>
 <body>
-    
     <h1>Data Visualisation Project</h1>
 
-    <button id="gdpPerCapita">GDP Per Capita</button>
-    <button id="gdp">GDP</button>
-    <button id="toggleView">Toggle View</button>
 
-    
+
     <div id="main-container">
         <div id="left-toolbar" class="toolbar">
-            <!-- Left toolbar content -->
-            <input type="range" id="yearSlider" min="1980" max="2021" value="1980" step="1">
-            <label for="yearSlider" id="yearLabel">Year: 1995</label>
+            <button id="gdpPerCapita">GDP Per Capita</button>
+            <button id="gdp">GDP</button>
+            <button id="toggleView">Toggle View</button>
+            <input type="range" id="yearSlider" min="1980" max="2021" value="1980">
+            <label for="yearSlider" id="yearLabel">1980</label>
         </div>
         <div id="chart-container">
             <div id="chart"></div> <!-- Container for the D3 chart -->
             <div id="tooltip" class="tooltip"></div>
         </div>
         <div id="right-toolbar" class="toolbar">
-            <!-- Right toolbar content -->
-            <select id="countryDropdown">
-                <option value="all">All Countries</option>
-            </select>            
+            <div id="countryCheckboxesContainer">
+                <input type="checkbox" id="checkAll" />
+                <label for="checkAll">Check All</label>
+                <div id="countryCheckboxes" class="scrollbox">
+                    <!-- Checkboxes will be populated here -->
+                </div>
+            </div>          
         </div>
     </div>
 
-
-    
     <footer style="color:grey; text-align: center">
         COS30045 Data Visualisation <br>
         Fabian Sigmund, Vasudevan Karthikeyan 
     </footer>
+
+    <script type="module" src="./eventHandlers.js"></script>
 </body>
 </html>

@@ -12,30 +12,48 @@ function debounce(func, wait) {
     };
 }
 
-function populateCountryDropdown(loadedData, isContinentView) {
-    var dropdown = document.getElementById('countryDropdown');
-    var countries = isContinentView
+function populateCountryCheckboxes(loadedData, isContinentView) {
+    const container = document.getElementById('countryCheckboxes');
+    if (!container) return;
+    container.innerHTML = ''; // Clear any existing checkboxes
+    const countries = isContinentView
         ? [...new Set(loadedData.filter(d => d.country === "N/A").map(d => d.continent))]
         : [...new Set(loadedData.filter(d => d.country !== "N/A").map(d => d.country))];
 
     countries.sort().forEach(country => {
-        var option = document.createElement('option');
-        option.value = country;
-        option.text = country;
-        dropdown.add(option);
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = country;
+        checkbox.id = `checkbox-${country}`;
+        checkbox.classList.add('country-checkbox');
+        checkbox.checked = true; // Check the checkbox by default
+        const label = document.createElement('label');
+        label.htmlFor = `checkbox-${country}`;
+        label.textContent = country;
+        container.appendChild(checkbox);
+        container.appendChild(label);
+        container.appendChild(document.createElement('br'));
     });
 }
 
-function updateChartBasedOnCountry(svg, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors, selectedCountry) {
+function getSelectedCountries() {
+    const checkboxes = document.querySelectorAll('.country-checkbox:checked');
+    return Array.from(checkboxes).map(cb => cb.value);
+}
+
+function updateChartBasedOnCountrySelection(svg, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
     year = Number(document.getElementById('yearSlider').value);
+    var selectedCountries = getSelectedCountries();
 
     let displayData = loadedData.filter(d => d.year === year)
                                 .sort((a, b) => b.values.population - a.values.population);
 
-    if (isContinentView) {
-        displayData = displayData.filter(d => d.country === "N/A" && (selectedCountry === "all" || d.continent === selectedCountry));
+    if (selectedCountries.length === 0) {
+        displayData = [];
+    } else if (isContinentView) {
+        displayData = displayData.filter(d => d.country === "N/A" && selectedCountries.includes(d.continent));
     } else {
-        displayData = displayData.filter(d => d.country !== "N/A" && (selectedCountry === "all" || d.country === selectedCountry));
+        displayData = displayData.filter(d => d.country !== "N/A" && selectedCountries.includes(d.country));
     }
 
     document.getElementById("yearLabel").innerHTML = year;
@@ -43,9 +61,9 @@ function updateChartBasedOnCountry(svg, loadedData, year, xAxisVar, xAxisLabel, 
 }
 
 function init() {
-    var w = 640;
-    var h = 480;
-    var padding = 36;
+    const w = 640;
+    const h = 480;
+    const padding = 36;
 
     const continentColors = {
         "North America": "#1f77b4",
@@ -84,35 +102,41 @@ function init() {
 
     loadData(currentCsvPath).then(data => {
         loadedData = data;
-        populateCountryDropdown(loadedData, isContinentView);
+        populateCountryCheckboxes(loadedData, isContinentView); // Populate the checkboxes
         updateChart(svg, loadedData, 1980, xAxisVar, xAxisLabel, isContinentView, continentColors);
+
+        document.getElementById('gdpPerCapita').addEventListener('click', function () {
+            xAxisLabel = "GDP per Capita in USD";
+            xAxisVar = "gdpPerCapita";
+            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+        });
+
+        document.getElementById('gdp').addEventListener('click', function () {
+            xAxisLabel = "GDP in Billion USD";
+            xAxisVar = "gdp";
+            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+        });
+
+        document.getElementById('yearSlider').addEventListener('input', debounce(function () {
+            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+        }, 100));
+
+        document.getElementById('toggleView').addEventListener('click', function () {
+            isContinentView = !isContinentView;
+            populateCountryCheckboxes(loadedData, isContinentView); // Repopulate the checkboxes based on the view
+            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+        });
+
+        document.getElementById('countryCheckboxes').addEventListener('change', function () {
+            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+        });
+
+        document.getElementById('checkAll').addEventListener('change', function () {
+            const checkboxes = document.querySelectorAll('.country-checkbox');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+        });
     }).catch(err => console.error('Error loading data:', err));
-
-    document.getElementById('gdpPerCapita').addEventListener('click', function () {
-        xAxisLabel = "GDP per Capita in USD";
-        xAxisVar = "gdpPerCapita";
-        updateChart(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
-    });
-
-    document.getElementById('gdp').addEventListener('click', function () {
-        xAxisLabel = "GDP in Billion USD";
-        xAxisVar = "gdp";
-        updateChart(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
-    });
-
-    document.getElementById('yearSlider').addEventListener('input', debounce(function () {
-        updateChartBasedOnCountry(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors, document.getElementById('countryDropdown').value);
-    }, 100));
-
-    document.getElementById('toggleView').addEventListener('click', function () {
-        isContinentView = !isContinentView;
-        populateCountryDropdown(loadedData, isContinentView);
-        updateChartBasedOnCountry(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors, document.getElementById('countryDropdown').value);
-    });
-
-    document.getElementById('countryDropdown').addEventListener('change', function () {
-        updateChartBasedOnCountry(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors, this.value);
-    });
 }
 
 window.onload = init;
