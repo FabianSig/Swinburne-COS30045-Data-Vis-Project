@@ -153,3 +153,20 @@ h1 {
 .country-checkbox-wrapper label:hover {
     color: #007BFF;
 }
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.legend-text {
+    font-size: 14px;
+}

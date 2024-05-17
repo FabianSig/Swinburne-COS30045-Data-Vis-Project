@@ -1,4 +1,7 @@
+var highlightedContinent = "";
+
 export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
+    
     var w = 640;
     var h = 480;
     var padding = 36;
@@ -28,6 +31,7 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
     var countryData = d3.group(filteredData, d => isContinentView ? d.continent : d.country);
 
     var line = d3.line()
+                .curve(d3.curveBasis)
                 .x(d => xScale(d.values[xAxisVar]))
                 .y(d => yScale(d.values.lifeExpec));
 
@@ -44,7 +48,7 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
         .style("opacity", 0)
         .transition()
         .duration(750)
-        .style("opacity", 1);
+        .style('opacity', d => (d[0].continent === highlightedContinent) || !highlightedContinent ? 1 : 0.1)
 
     lines.transition()
         .duration(750)
@@ -66,6 +70,7 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
         .style('fill', d => continentColors[d.continent])
         .style('stroke', 'black')
         .style('stroke-width', 1);
+
 
     svg.selectAll("text.x-axis-label").remove();
 
@@ -89,6 +94,7 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
         .on('mouseout', function () {
             d3.select('#tooltip').style('visibility', 'hidden');
         })
+        .on('click', (d, e) => updateHighlightedContinent(e.continent, svg))
         .transition()
         .duration(750)
         .attr('r', d => rScale(d.values.population))
@@ -103,6 +109,8 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
         .remove();
 
     svg.selectAll('circle').raise();
+
+    addLegend(continentColors, svg);
 }
 
 export function updateChart(svg, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
@@ -114,3 +122,70 @@ export function updateChart(svg, loadedData, year, xAxisVar, xAxisLabel, isConti
 
     drawChart(svg, displayData, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors);
 }
+
+function addLegend(continentColors, svg){
+    var legendContainer = d3.select("#legend-container");
+    var continents = ["Africa", "Asia", "Europe", "North America", "Oceania", "South America"];
+
+    var legend = legendContainer.selectAll(".legend-item")
+        .data(continents);
+
+    var legendEnter = legend.enter()
+        .append("div")
+        .attr("class", "legend-item")
+        .style("display", "flex")
+        .style("align-items", "center")
+        .style("margin-bottom", "5px")
+        .on('click', (_, d) => updateHighlightedContinent(d, svg));
+
+    legendEnter.append("div")
+        .attr("class", "legend-color")
+        .style("width", "10px")
+        .style("height", "10px")
+        .style("margin-right", "5px")
+        .style("background-color", d => continentColors[d]);
+
+    legendEnter.append("div")
+        .attr("class", "legend-text")
+        .text(d => d);
+
+    legend.exit().remove();
+}
+
+function updateHighlightedContinent(continent, svg){
+
+    if(continent === highlightedContinent) {
+        svg.selectAll('.node')
+                .transition()
+                .duration(750)
+                .style('opacity', 1);
+
+        svg.selectAll('.history-line')
+                .transition()
+                .duration(750)
+                .style('opacity', 1);
+
+        highlightedContinent = ""
+    }
+
+    else{
+        svg.selectAll('.node')
+                .transition()
+                .duration(750)
+                .style('opacity', function(nodeData) {
+                    return nodeData.continent === continent ? 1 : 0.1;
+                });
+
+            svg.selectAll('.history-line')
+                .transition()
+                .duration(750)
+                .style('opacity', function(lineData) {
+                    return lineData[0].continent === continent ? 1 : 0.1;
+                });
+        
+        highlightedContinent = continent;
+    }
+
+
+}
+
