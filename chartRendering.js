@@ -171,7 +171,7 @@ function updateHighlightedContinent(continent, svg){
                 .duration(750)
                 .style('opacity', 1);
                 
-        svg.selectAll('.legend-item')
+        d3.selectAll('.legend-item')
                 .transition()
                 .duration(750)
                 .style('opacity', 1);
