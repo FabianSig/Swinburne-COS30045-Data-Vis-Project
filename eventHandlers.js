@@ -150,7 +150,7 @@ function updateActiveButton(button){
     document.querySelectorAll('.x-Axis-button').forEach(element => {
         element.style.backgroundColor = "#ffffff";
     });
-    button.style.backgroundColor = "#dbe5f0";
+    button.style.backgroundColor = "#a4b6ca";
 }
 
 window.onload = init;
