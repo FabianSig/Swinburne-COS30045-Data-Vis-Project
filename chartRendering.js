@@ -106,7 +106,8 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
         .attr('r', d => rScale(d.values.population))
         .attr('cx', d => xScale(d.values[xAxisVar]))
         .attr('cy', d => yScale(d.values.lifeExpec))
-        .style('fill', d => continentColors[d.continent]);
+        .style('fill', d => continentColors[d.continent])
+        .style('opacity', d => d.continent === highlightedContinent || !highlightedContinent ? 1 : 0.1);;
 
     update.exit()
         .transition()
