@@ -1,7 +1,7 @@
 export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
-    var w = 800;
-    var h = 600;
-    var padding = 40;
+    var w = 640;
+    var h = 480;
+    var padding = 36;
 
     var xScale = d3.scaleLinear()
         .domain([0, d3.max(isContinentView ? loadedData.filter(d => d.country === "N/A") : loadedData.filter(d => d.country !== "N/A"), d => d.values[xAxisVar])])

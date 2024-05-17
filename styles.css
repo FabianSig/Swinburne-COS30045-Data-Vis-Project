@@ -18,6 +18,14 @@ button:hover{
     text-align: center;
 }
 
+#main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+}
+
 #tooltip {
     position: absolute;
     visibility: hidden;

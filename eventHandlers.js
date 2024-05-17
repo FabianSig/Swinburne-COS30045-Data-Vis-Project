@@ -14,9 +14,9 @@ function debounce(func, wait) {
 
 function init() {
     
-    var w = 800;
-    var h = 600;
-    var padding = 40;
+    var w = 640;
+    var h = 480;
+    var padding = 36;
 
     const continentColors = {
         "North America": "#1f77b4",

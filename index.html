@@ -27,12 +27,25 @@
     <button id="toggleView">Toggle View</button>
 
     
+    <div id="main-container">
+        <div id="left-toolbar" class="toolbar">
+            <!-- Left toolbar content -->
+            <input type="range" id="yearSlider" min="1980" max="2021" value="1980" step="1">
+            <label for="yearSlider" id="yearLabel">Year: 1995</label>
+        </div>
+        <div id="chart-container">
+            <div id="chart"></div> <!-- Container for the D3 chart -->
+            <div id="tooltip" class="tooltip"></div>
+        </div>
+        <div id="right-toolbar" class="toolbar">
+            <!-- Right toolbar content -->
+            <select id="countryDropdown">
+                <option value="all">All Countries</option>
+            </select>            
+        </div>
+    </div>
 
-    <div id="chart"></div> <!-- Container for the D3 chart -->
-    <div id="tooltip"></div>
 
-    <input type="range" id="yearSlider" min="1980" max="2021" value="1980" step="1">
-    <label for="yearSlider" id="yearLabel">Year: 1995</label>
     
     <footer style="color:grey; text-align: center">
         COS30045 Data Visualisation <br>
