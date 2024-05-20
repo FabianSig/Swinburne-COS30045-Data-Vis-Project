@@ -83,7 +83,7 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
     enter.merge(update)
         .on('mouseover', function (event, d) {
             d3.select('#tooltip')
-                .style('visibility', 'visible')
+                .style('visibility', d.continent === highlightedContinent || !highlightedContinent ? 'visible' : 'invisible')
                 .html(`${isContinentView ? `Continent: ${d.continent}` : `Country: ${d.country}`}<br>
                        ${isContinentView ? 'Average' : ''} Life Expectancy: ${Math.round(d.values.lifeExpec * 100) / 100}<br>
                        ${isContinentView ? 'Average' : ''} ${xAxisLabel}: ${Math.round(d.values[xAxisVar] * 100) / 100}
