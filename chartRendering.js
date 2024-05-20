@@ -16,7 +16,7 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
 
     var rScale = d3.scaleLinear()
         .domain([0, d3.max(loadedData.filter(d => d.year === year), d => d.values.population)])
-        .range([5, 20]);
+        .range([5, 60]);
 
     svg.select('.x-axis').call(d3.axisBottom(xScale).ticks(5));
     svg.select('.y-axis').call(d3.axisLeft(yScale).ticks(5));
