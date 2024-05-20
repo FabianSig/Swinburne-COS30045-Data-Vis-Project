@@ -30,6 +30,11 @@ body {
     padding: 10px;
 }
 
+#right-toolbar {
+    display: flex;
+    flex-direction: row;
+}
+
 #chart-container {
     display: flex;
     flex-direction: column;
@@ -89,14 +94,19 @@ body {
     z-index: 100;
 }
 
+#story-telling-container {
+    height: 400px;
+}
+
 #countryCheckboxesContainer {
+    
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    max-height: 200px;
 }
 
 .scrollbox {
-    max-height: 400px;
     overflow-y: auto;
     padding: 10px;
     width: 200px;
