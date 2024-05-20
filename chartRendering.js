@@ -6,8 +6,8 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
     var h = 480;
     var padding = 36;
 
-    var xScale = d3.scaleLinear()
-        .domain([0, d3.max(isContinentView ? loadedData.filter(d => d.country === "N/A") : loadedData.filter(d => d.country !== "N/A"), d => d.values[xAxisVar])])
+    var xScale = d3.scaleLog().base(2)
+        .domain([d3.min(isContinentView ? loadedData.filter(d => d.country === "N/A") : loadedData.filter(d => d.country !== "N/A"), d => d.values[xAxisVar]), d3.max(isContinentView ? loadedData.filter(d => d.country === "N/A") : loadedData.filter(d => d.country !== "N/A"), d => d.values[xAxisVar])])
         .range([padding, w - padding]);
 
     var yScale = d3.scaleLinear()
@@ -43,7 +43,7 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
         .attr("class", "history-line")
         .attr("fill", "none")
         .attr("stroke", d => continentColors[d[0].continent])
-        .attr("stroke-width", 2)
+        .attr("stroke-width", 1)
         .attr("d", line)
         .style("opacity", 0)
         .transition()
