@@ -1,5 +1,6 @@
 import { loadData } from './dataProcessing.js';
 import { drawChart, updateChart } from './chartRendering.js';
+import { w, h, padding } from './globalVars.js'
 
 let loadedData = [];
 let currentCsvPath = './data/cleanedData/merged_data.csv';
@@ -66,9 +67,7 @@ function updateChartBasedOnCountrySelection(svg, loadedData, year, xAxisVar, xAx
 }
 
 function init() {
-    const w = 640;
-    const h = 480;
-    const padding = 36;
+
 
     const continentColors = {
         "North America": "#1f77b4",
@@ -88,8 +87,13 @@ function init() {
         .attr("width", w)
         .attr("height", h);
 
-    svg.append('g').attr('class', 'x-axis').attr('transform', `translate(0,${h - padding})`);
-    svg.append('g').attr('class', 'y-axis').attr('transform', `translate(${padding},0)`);
+    svg.append('g').attr('class', 'x-axis')
+        .attr('transform', `translate(0,${h - padding})`)
+        .style("font-size","11px");
+
+    svg.append('g').attr('class', 'y-axis')
+        .attr('transform', `translate(${padding},0)`)
+        .style("font-size","11px");
 
     var yearLabel = svg.append("text")
         .attr("class", "year-label")
@@ -100,7 +104,7 @@ function init() {
     svg.append("text")
         .attr("class", "y-axis-label")
         .attr("transform", "rotate(-90)")
-        .attr("y", 12)
+        .attr("y", padding - 25)
         .attr("x", -h / 2)
         .style("text-anchor", "middle")
         .text(yAxisLabel);

@@ -1,10 +1,7 @@
 var highlightedContinent = "";
+import { w, h, padding } from './globalVars.js'
 
 export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
-    
-    var w = 640;
-    var h = 480;
-    var padding = 36;
 
     var xScale = d3.scaleLog().base(2)
         .domain([d3.min(isContinentView ? loadedData.filter(d => d.country === "N/A") : loadedData.filter(d => d.country !== "N/A"), d => d.values[xAxisVar]), d3.max(isContinentView ? loadedData.filter(d => d.country === "N/A") : loadedData.filter(d => d.country !== "N/A"), d => d.values[xAxisVar])])
@@ -76,7 +73,7 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
 
     svg.append("text")
         .attr("class", "x-axis-label")
-        .attr("transform", `translate(${w / 2}, ${h - 5})`)
+        .attr("transform", `translate(${w / 2}, ${h - 20})`)
         .style("text-anchor", "middle")
         .text(`${xAxisLabel} (${year})`);
 
