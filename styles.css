@@ -1,75 +1,46 @@
 body {
-    font-family: Arial, sans-serif;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 99vh;
-    margin: 0;
     flex-direction: column;
-    overflow-y: hidden;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
 }
 
 #main-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 100vh;
     width: 100%;
-    margin-top: -30px;
-    max-width: 1200px;
-}
-
-#gdpPerCapita{
-    background-color: #dbe5f0;
+    justify-content: space-between;
 }
 
 .toolbar {
-    width: 18%;
+    height: 100%;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    padding: 10px;
-}
-
-#right-toolbar {
-    display: flex;
-    flex-direction: column;
+    justify-content: center;
 }
 
 #chart-container {
+    width: 60%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    padding: 20px;
-    position: relative;
-}
-
-#chart {
-    width: 640px;
-    height: 480px;
 }
 
 #slider-container {
-    width: 580px;
+    width: 100%; /* Ensure it fills the width of its parent */
     margin-top: 2px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.slider-value-box {
-    width: 40px;
-    text-align: center;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    padding: 5px;
-    margin: 5px;
-    font-size: 14px;
-}
-
 #yearSlider {
-    width: 100%;
+    width: 70%;
     -webkit-appearance: none;
     appearance: none;
     height: 4px;
@@ -84,6 +55,37 @@ body {
     opacity: 1;
 }
 
+
+.slider-value-box {
+    width: 40px;
+    text-align: center;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    font-size: 14px;
+}
+
+.toolbar-segment {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+    height: 100%;
+    width: 100%;
+
+    margin: 10px;
+    height: 50%;
+    width: 100%;
+    border: 1px solid red;
+}
+
+.scrollbox {
+    overflow-y: auto;
+    max-height: 200px; /* Adjust as needed */
+}
+
 #tooltip {
     position: absolute;
     visibility: hidden;
@@ -95,27 +97,10 @@ body {
     z-index: 100;
 }
 
-#story-telling-container {
-    width: 100%;
-    height: 40vh;
-    border:  1px solid red;
-    margin-bottom: 10px;
+#top-left-segment{
+    font-size: 30px;
 }
 
-#countryCheckboxesContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    height: 40vh;
-}
-
-.scrollbox {
-    overflow-y: auto;
-    padding: 10px;
-    width: 200px;
-}
-
-/* Custom scrollbar styles */
 .scrollbox::-webkit-scrollbar {
     width: 8px;
 }
@@ -201,6 +186,10 @@ button {
 button:hover{
     background-color: #f0f0f0;
     cursor:pointer;
+}
+
+#gdpPerCapita {
+    background-color: #a4b6ca; /* Initial selected x-Axis*/
 }
 
 input[type="checkbox"] {
