@@ -68,7 +68,6 @@ function updateChartBasedOnCountrySelection(svg, loadedData, year, xAxisVar, xAx
 
 function init() {
 
-
     const continentColors = {
         "North America": "#1f77b4",
         "South America": "#ff7f0e",
@@ -124,6 +123,13 @@ function init() {
         document.getElementById('gdp').addEventListener('click', function () {
             xAxisLabel = "GDP in Billion USD";
             xAxisVar = "gdp";
+            updateActiveButton(this);
+            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+        });
+
+        document.getElementById('childMortality').addEventListener('click', function () {
+            xAxisLabel = "Child Mortality out of 100";
+            xAxisVar = "childMortality";
             updateActiveButton(this);
             updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
         });

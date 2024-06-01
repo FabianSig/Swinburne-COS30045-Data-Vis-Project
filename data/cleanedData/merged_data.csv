@@ -1,4 +1,4 @@
-Country;Continent;year;gdp;gdpPerCapita;lifeExpectancy;population;ChildMortality
+Country;Continent;year;gdp;gdpPerCapita;lifeExpectancy;population;childMortality
 Austria;Europe;1980;79.42199651;21932;72.7;7549433;1.6243601
 Austria;Europe;1981;86.81157568;21866;73;7568710;1.5489244
 Austria;Europe;1982;94.02890165;22254;73.2;7574140;1.4767412
