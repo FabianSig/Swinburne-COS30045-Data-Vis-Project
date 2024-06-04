@@ -101,10 +101,14 @@ function playYears() {
     }, 40); // Adjust the interval time as needed
 }
 
-function changeData(xAxisLabel, xAxisVar, button){
+function changeData(newXAxisLabel, newXAxisVar, button) {
+    xAxisLabel = newXAxisLabel;
+    xAxisVar = newXAxisVar;
     updateActiveButton(button);
     updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
 }
+
+window.changeData = changeData;
 
 function init() {
     svg = d3.select("#chart").append("svg")
@@ -137,26 +141,6 @@ function init() {
         loadedData = data;
         populateCountryCheckboxes(loadedData, isContinentView); // Populate the checkboxes
         updateChart(svg, loadedData, 1980, xAxisVar, xAxisLabel, isContinentView, continentColors);
-
-
-        document.getElementById('gdpPerCapita').addEventListener('click', function () {
-            xAxisLabel = "GDP per Capita in USD";
-            xAxisVar = "gdpPerCapita";
-        });
-
-        document.getElementById('gdp').addEventListener('click', function () {
-            xAxisLabel = "GDP in Billion USD";
-            xAxisVar = "gdp";
-            updateActiveButton(this);
-            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
-        });
-
-        document.getElementById('childMortality').addEventListener('click', function () {
-            xAxisLabel = "Child Mortality out of 100";
-            xAxisVar = "childMortality";
-            updateActiveButton(this);
-            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
-        });
 
         document.getElementById('yearSlider').addEventListener('input', debounce(function () {
             updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);

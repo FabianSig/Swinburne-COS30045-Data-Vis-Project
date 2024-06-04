@@ -20,9 +20,9 @@
                 <div id ="legend-container"></div>
             </div>
             <div class="toolbar-segment" >
-                <button id="gdpPerCapita" class="x-Axis-button">GDP Per Capita</button>
-                <button id="gdp" class="x-Axis-button">GDP</button>
-                <button id="childMortality" class="x-Axis-button">Child Mortality</button>
+                <button id="gdpPerCapita" class="x-Axis-button" onclick="changeData('GDP per Capita in USD', 'gdpPerCapita', this)">GDP Per Capita</button>
+                <button id="gdp" class="x-Axis-button" onclick="changeData('GDP in Billion USD', 'gdp', this)">GDP</button>
+                <button id="childMortality" class="x-Axis-button" onclick="changeData('Child Mortality out of 100', 'childMortality', this)">Child Mortality</button>
                 <button id="toggleView">Toggle View</button>
             </div>
         </div>
