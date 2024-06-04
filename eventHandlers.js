@@ -4,6 +4,19 @@ import { w, h, padding } from './globalVars.js'
 
 let loadedData = [];
 let currentCsvPath = './data/cleanedData/merged_data.csv';
+let playInterval;
+let svg;
+let xAxisVar = "gdpPerCapita";
+let xAxisLabel = "GDP per Capita in USD";
+let isContinentView = false;
+const continentColors = {
+    "North America": "#1f77b4",
+    "South America": "#ff7f0e",
+    "Europe": "#2ca02c",
+    "Africa": "#d62728",
+    "Asia": "#9467bd",
+    "Oceania": "#8c564b"
+};
 
 function debounce(func, wait) {
     let timeout;
@@ -42,7 +55,6 @@ function populateCountryCheckboxes(loadedData, isContinentView) {
     });
 }
 
-
 function getSelectedCountries() {
     const checkboxes = document.querySelectorAll('.country-checkbox:checked');
     return Array.from(checkboxes).map(cb => cb.value);
@@ -66,23 +78,36 @@ function updateChartBasedOnCountrySelection(svg, loadedData, year, xAxisVar, xAx
     drawChart(svg, displayData, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors);
 }
 
+function playYears() {
+    const yearSlider = document.getElementById('yearSlider');
+    let currentYear = Number(yearSlider.value);
+    let lastWholeYear = Math.floor(currentYear);
+    yearSlider.disabled = true;     
+
+    playInterval = setInterval(() => {
+        if (currentYear < 2021) {
+            currentYear += 0.1; // Increment by 0.1 for smoother animation
+            yearSlider.value = currentYear.toFixed(1); // Update the slider with fractional value
+
+            const wholeYear = Math.floor(currentYear);
+            if (wholeYear !== lastWholeYear) { // Update chart only when whole year changes
+                lastWholeYear = wholeYear;
+                updateChartBasedOnCountrySelection(svg, loadedData, wholeYear, xAxisVar, xAxisLabel, isContinentView, continentColors);
+            }
+        } else {
+            clearInterval(playInterval);
+            yearSlider.disabled = false
+        }
+    }, 40); // Adjust the interval time as needed
+}
+
+function changeData(xAxisLabel, xAxisVar, button){
+    updateActiveButton(button);
+    updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+}
+
 function init() {
-
-    const continentColors = {
-        "North America": "#1f77b4",
-        "South America": "#ff7f0e",
-        "Europe": "#2ca02c",
-        "Africa": "#d62728",
-        "Asia": "#9467bd",
-        "Oceania": "#8c564b"
-    };
-
-    var xAxisLabel = "GDP per Capita in USD";
-    var yAxisLabel = "Life Expectancy in years";
-    var xAxisVar = "gdpPerCapita";
-    var isContinentView = false;
-
-    var svg = d3.select("#chart").append("svg")
+    svg = d3.select("#chart").append("svg")
         .attr("width", w)
         .attr("height", h);
 
@@ -106,18 +131,17 @@ function init() {
         .attr("y", padding - 25)
         .attr("x", -h / 2)
         .style("text-anchor", "middle")
-        .text(yAxisLabel);
+        .text("Life Expectancy in years");
 
     loadData(currentCsvPath).then(data => {
         loadedData = data;
         populateCountryCheckboxes(loadedData, isContinentView); // Populate the checkboxes
         updateChart(svg, loadedData, 1980, xAxisVar, xAxisLabel, isContinentView, continentColors);
 
+
         document.getElementById('gdpPerCapita').addEventListener('click', function () {
             xAxisLabel = "GDP per Capita in USD";
             xAxisVar = "gdpPerCapita";
-            updateActiveButton(this);
-            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
         });
 
         document.getElementById('gdp').addEventListener('click', function () {
@@ -153,6 +177,9 @@ function init() {
             checkboxes.forEach(cb => cb.checked = this.checked);
             updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
         });
+
+        document.getElementById('playButton').addEventListener('click', playYears); // Add event listener for play button
+
     }).catch(err => console.error('Error loading data:', err));
 }
 
