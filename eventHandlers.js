@@ -109,7 +109,7 @@ function changeData(newXAxisLabel, newXAxisVar, button) {
     updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
 }
 
-
+window.changeData = changeData;
 
 function init() {
     svg = d3.select("#chart").append("svg")
