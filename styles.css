@@ -16,7 +16,7 @@ body {
 }
 
 .toolbar {
-    height: 450px;
+    height: 100%;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -235,11 +235,9 @@ input[type="checkbox"]:checked::before {
 }
 
 #text-container{
-    width: 400px;
-    height: 300px;
-    float: right;
-    align-items: center;
-    margin-right: 15px;
+    padding-top: 20px;
+    padding-right: 20px;
+    text-align: justify;
 }
 
 #title{
