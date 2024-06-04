@@ -1,6 +1,6 @@
 import { loadData } from './dataProcessing.js';
 import { drawChart, updateChart } from './chartRendering.js';
-import { w, h, padding } from './globalVars.js'
+import { w, h, padding, toggleTrailsVisibility } from './globalVars.js'
 
 let loadedData = [];
 let currentCsvPath = './data/cleanedData/merged_data.csv';
@@ -9,6 +9,7 @@ let svg;
 let xAxisVar = "gdpPerCapita";
 let xAxisLabel = "GDP per Capita in USD";
 let isContinentView = false;
+
 const continentColors = {
     "North America": "#1f77b4",
     "South America": "#ff7f0e",
@@ -108,7 +109,7 @@ function changeData(newXAxisLabel, newXAxisVar, button) {
     updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
 }
 
-window.changeData = changeData;
+
 
 function init() {
     svg = d3.select("#chart").append("svg")
@@ -149,6 +150,11 @@ function init() {
         document.getElementById('toggleView').addEventListener('click', function () {
             isContinentView = !isContinentView;
             populateCountryCheckboxes(loadedData, isContinentView); // Repopulate the checkboxes based on the view
+            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+        });
+
+        document.getElementById('toggleTrails').addEventListener('click', function () {
+            toggleTrailsVisibility();
             updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
         });
 
