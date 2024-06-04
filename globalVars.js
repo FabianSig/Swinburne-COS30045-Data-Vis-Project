@@ -2,6 +2,12 @@ export const w = 660;
 export const h = 500;
 export const padding = 56;
 
+export let trailsVisibility = true;
+
+export function toggleTrailsVisibility(){
+    trailsVisibility = !trailsVisibility
+}
+
 export const stroke_colors = {
     "North America": "#051831",
     "South America": "#cc6602",

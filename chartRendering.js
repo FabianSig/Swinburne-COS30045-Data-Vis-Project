@@ -1,5 +1,5 @@
 var highlightedContinent = "";
-import { w, h, padding, stroke_colors, continentColors} from './globalVars.js'
+import { w, h, padding, stroke_colors, continentColors, trailsVisibility} from './globalVars.js'
 
 export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLabel, isContinentView) {
 
@@ -45,11 +45,12 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
         .style("opacity", 0)
         .transition()
         .duration(750)
-        .style('opacity', d => (d[0].continent === highlightedContinent) || !highlightedContinent ? 1 : 0.1)
+        .style('opacity', d => trailsVisibility ? ((d[0].continent === highlightedContinent) || !highlightedContinent ? 1 : 0.1) : 0);    
 
     lines.transition()
         .duration(750)
-        .attr("d", line);
+        .attr("d", line)
+        .style('opacity', d => trailsVisibility ? ((d[0].continent === highlightedContinent) || !highlightedContinent ? 1 : 0.1) : 0);
 
     lines.exit()
         .transition()
