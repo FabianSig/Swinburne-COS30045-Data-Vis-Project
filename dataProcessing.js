@@ -10,7 +10,8 @@ export function loadData(csvPath) {
                 gdp: +data.gdp,
                 gdpPerCapita: +data.gdpPerCapita,
                 population: +data.population,
-                childMortality: +data.childMortality
+                childMortality: +data.childMortality,
+                humanRightsIndex: +data.humanRightsIndex
             }
         };
         return result;
