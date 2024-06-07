@@ -60,11 +60,17 @@ function playYears() {
     }, 40); // Adjust the interval time as needed
 }
 
-function changeData(newXAxisLabel, newXAxisVar, button) {
+function changeDataOnButtonEvent(newXAxisLabel, newXAxisVar, button) {
     xAxisLabel = newXAxisLabel;
     xAxisVar = newXAxisVar;
-    updateActiveButton(button);
-  updateChartBasedOnCountrySelection();
+
+    //Change the colors of the buttons so the new one appears as active
+    document.querySelectorAll('.x-Axis-button').forEach(element => {
+        element.style.backgroundColor = "#ffffff";
+    });
+    button.style.backgroundColor = "#a4b6ca";
+
+    updateChartBasedOnCountrySelection();
 }
 
 function init() {
@@ -79,12 +85,6 @@ function init() {
     svg.append('g').attr('class', 'y-axis')
         .attr('transform', `translate(${padding},0)`)
         .style("font-size","11px");
-
-    var yearLabel = svg.append("text")
-        .attr("class", "year-label")
-        .style("text-anchor", "end")
-        .attr("x", w - padding)
-        .attr("y", padding);
 
     svg.append("text")
         .attr("class", "y-axis-label")
@@ -129,12 +129,6 @@ function init() {
     }).catch(err => console.error('Error loading data:', err));
 }
 
-function updateActiveButton(button){
-    document.querySelectorAll('.x-Axis-button').forEach(element => {
-        element.style.backgroundColor = "#ffffff";
-    });
-    button.style.backgroundColor = "#a4b6ca";
-}
 
-window.changeData = changeData;
+window.changeData = changeDataOnButtonEvent;
 window.onload = init;
