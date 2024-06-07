@@ -1,6 +1,7 @@
 /**
- * Loads and processes the CSV data, storing it in lifeData.
+ * Loads and processes the CSV data.
  * @param {string} csvPath - The path to the CSV file.
+ * @returns {Promise<Array<Object>>} A promise that resolves to an array of objects representing the data.
  */
 export function loadData(csvPath) {
     return d3.dsv(";", csvPath, function(data) {
