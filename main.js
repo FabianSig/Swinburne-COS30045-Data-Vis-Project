@@ -5,13 +5,13 @@ import {
     h,
     padding,
     loadedData,
+    csvPath,
     toggleTrailsVisibility,
     setLoadedData,
     setXAxisLabel,
     setXAxisVar
 } from './globalVars.js'
 
-let currentCsvPath = './data/cleanedData/merged_data.csv';
 let playInterval;
 let svg;
 let isContinentView = false;
@@ -92,7 +92,7 @@ function init() {
         .style("text-anchor", "middle")
         .text("Life Expectancy in years");
 
-    loadData(currentCsvPath).then(data => {
+    loadData(csvPath).then(data => {
 
         setLoadedData(data);
         populateCountryCheckboxes(loadedData, isContinentView); // Populate the checkboxes
