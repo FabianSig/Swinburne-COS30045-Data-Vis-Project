@@ -1,4 +1,7 @@
-// Loads and processes the CSV data, storing it in lifeData
+/**
+ * Loads and processes the CSV data, storing it in lifeData.
+ * @param {string} csvPath - The path to the CSV file.
+ */
 export function loadData(csvPath) {
     return d3.dsv(";", csvPath, function(data) {
         let result = {
@@ -18,7 +21,11 @@ export function loadData(csvPath) {
     });
 }
 
-
+/**
+ * Populates the country checkboxes based on the loaded data and view type.
+ * @param {Array<Object>} loadedData - The data loaded from the CSV file.
+ * @param {boolean} isContinentView - Indicates whether the view is by continent.
+ */
 export function populateCountryCheckboxes(loadedData, isContinentView) {
     const container = document.getElementById('countryCheckboxes');
     if (!container) return;
@@ -48,6 +55,12 @@ export function populateCountryCheckboxes(loadedData, isContinentView) {
     });
 }
 
+/**
+ * Creates a debounced function that delays invoking the provided function until after the specified wait time.
+ * @param {Function} func - The function to debounce.
+ * @param {number} wait - The number of milliseconds to delay.
+ * @returns {Function} The debounced function.
+ */
 export function debounce(func, wait) {
     let timeout;
     return function (...args) {
