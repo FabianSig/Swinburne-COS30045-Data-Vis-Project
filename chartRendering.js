@@ -1,5 +1,5 @@
 /**
- * chartRendering.js contains functions for rendering a data visualization chart using D3.js.
+ * chartRendering.js contains functions for rendering the chart using D3.js.
  * It handles the creation of scales, axes, circles, and lines for the chart, and manages
  * interactions such as tooltips and highlighting.
  *

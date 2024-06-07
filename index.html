@@ -11,9 +11,10 @@
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link rel="stylesheet" href="styles.css">
+    <script type="module" src="main.js"></script>
+
 </head>
 <body>
-
     <div id="main-container">
         <div class="toolbar">
             <div class="toolbar-segment" >
@@ -31,13 +32,10 @@
         <div id="chart-container">
             <div id="chart"></div> <!-- Container for the D3 chart -->
             <div id="slider-container">
-                <div id="slider-container">
                     <button id="playButton">▶</button>
                     <div class="slider-value-box" id="minValueBox">1980</div>
                     <input type="range" id="yearSlider" min="1980" max="2021" value="1980">
                     <div class="slider-value-box" id="maxValueBox">2021</div>
-                </div>
-                
             </div>
         </div>
 
@@ -67,8 +65,6 @@
             </div>          
         </div>
     </div>
-    <div id="tooltip" class="tooltip"></div>    
-
-    <script type="module" src="main.js"></script>
+    <div id="tooltip" class="tooltip"></div>
 </body>
 </html>

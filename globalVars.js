@@ -1,6 +1,6 @@
 /**
  * util.js contains constants, variables, and functions related to the
- * configuration and state management of a data visualization chart.
+ * configuration and state management of the chart.
  *
  * - Constants for chart dimensions and padding.
  * - Variables to hold loaded data, x-axis settings, and trail visibility state.

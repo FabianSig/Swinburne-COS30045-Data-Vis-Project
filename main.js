@@ -1,5 +1,5 @@
 /**
- * main.js initializes and manages the main interactions and rendering logic for the data visualization chart.
+ * main.js initializes and manages the main interactions and rendering logic for the chart.
  *
  * - Imports utility functions and variables from other modules.
  * - Sets up the SVG canvas and axes.
