@@ -1,21 +1,23 @@
+/**
+ * main.js initializes and manages the main interactions and rendering logic for the data visualization chart.
+ *
+ * - Imports utility functions and variables from other modules.
+ * - Sets up the SVG canvas and axes.
+ * - Loads data and populates checkboxes for country selection.
+ * - Handles updates to the chart based on user interactions such as selecting countries, changing x-axis variables, and playing through years.
+ */
+
 import { loadData, populateCountryCheckboxes, debounce} from './util.js';
 import { drawChart} from './chartRendering.js';
-import {
-    w,
-    h,
-    padding,
-    loadedData,
-    csvPath,
-    toggleTrailsVisibility,
-    setLoadedData,
-    setXAxisLabel,
-    setXAxisVar
-} from './globalVars.js'
+import {w, h, padding, loadedData, csvPath, toggleTrailsVisibility, setLoadedData, setXAxisLabel, setXAxisVar} from './globalVars.js'
 
 let playInterval;
 let svg;
 let isContinentView = false;
 
+/**
+ * Updates the chart based on the selected countries and the current year.
+ */
 function updateChartBasedOnCountrySelection() {
     let year = Number(document.getElementById('yearSlider').value);
     let selectedCountries = Array.from(document.querySelectorAll('.country-checkbox:checked')).map(cb => cb.value);
@@ -34,6 +36,9 @@ function updateChartBasedOnCountrySelection() {
     drawChart(svg, displayData, year, isContinentView);
 }
 
+/**
+ * Animates the chart by incrementing through the years.
+ */
 function playYears() {
     const yearSlider = document.getElementById('yearSlider');
     let currentYear = Number(yearSlider.value);
@@ -57,6 +62,12 @@ function playYears() {
     }, 40); // Adjust the interval time as needed
 }
 
+/**
+ * Changes the data displayed on the chart based on the button event.
+ * @param {string} newXAxisLabel - The new label for the x-axis.
+ * @param {string} newXAxisVar - The new variable for the x-axis.
+ * @param {HTMLElement} button - The button element that triggered the event.
+ */
 function changeDataOnButtonEvent(newXAxisLabel, newXAxisVar, button) {
 
     setXAxisLabel(newXAxisLabel);
@@ -71,6 +82,9 @@ function changeDataOnButtonEvent(newXAxisLabel, newXAxisVar, button) {
     updateChartBasedOnCountrySelection();
 }
 
+/**
+ * Initializes the SVG canvas, loads data, and sets up event listeners for interactions.
+ */
 function init() {
     svg = d3.select("#chart").append("svg")
         .attr("width", w)
@@ -127,7 +141,6 @@ function init() {
 
     }).catch(err => console.error('Error loading data:', err));
 }
-
 
 window.changeData = changeDataOnButtonEvent;
 window.onload = init;
