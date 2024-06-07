@@ -1,8 +1,8 @@
-import { w, h, padding, stroke_colors, continentColors, trailsVisibility} from './globalVars.js'
+import { w, h, padding, loadedData, xAxisLabel, xAxisVar, stroke_colors, continentColors, trailsVisibility} from './globalVars.js'
 
 var highlightedContinent = "";
 
-export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLabel, isContinentView) {
+export function drawChart(svg, dataForPlot, year, isContinentView) {
 
     var xScale = d3.scaleLog().base(2)
         .domain([d3.min(isContinentView ? loadedData.filter(d => d.country === "N/A") : loadedData.filter(d => d.country !== "N/A"), d => d.values[xAxisVar]), d3.max(isContinentView ? loadedData.filter(d => d.country === "N/A") : loadedData.filter(d => d.country !== "N/A"), d => d.values[xAxisVar])])

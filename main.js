@@ -1,13 +1,19 @@
 import { loadData, populateCountryCheckboxes, debounce} from './util.js';
 import { drawChart} from './chartRendering.js';
-import { w, h, padding, toggleTrailsVisibility } from './globalVars.js'
+import {
+    w,
+    h,
+    padding,
+    loadedData,
+    toggleTrailsVisibility,
+    setLoadedData,
+    setXAxisLabel,
+    setXAxisVar
+} from './globalVars.js'
 
-let loadedData = [];
 let currentCsvPath = './data/cleanedData/merged_data.csv';
 let playInterval;
 let svg;
-let xAxisVar = "gdpPerCapita";
-let xAxisLabel = "GDP per Capita in USD";
 let isContinentView = false;
 
 function updateChartBasedOnCountrySelection() {
@@ -25,7 +31,7 @@ function updateChartBasedOnCountrySelection() {
         displayData = displayData.filter(d => d.country !== "N/A" && selectedCountries.includes(d.country));
     }
 
-    drawChart(svg, displayData, loadedData, year, xAxisVar, xAxisLabel, isContinentView);
+    drawChart(svg, displayData, year, isContinentView);
 }
 
 function playYears() {
@@ -42,7 +48,7 @@ function playYears() {
             const wholeYear = Math.floor(currentYear);
             if (wholeYear !== lastWholeYear) { // Update chart only when whole year changes
                 lastWholeYear = wholeYear;
-                updateChartBasedOnCountrySelection(svg, loadedData, wholeYear, xAxisVar, xAxisLabel, isContinentView);
+                updateChartBasedOnCountrySelection(svg, wholeYear, xAxisVar, xAxisLabel, isContinentView);
             }
         } else {
             clearInterval(playInterval);
@@ -52,8 +58,9 @@ function playYears() {
 }
 
 function changeDataOnButtonEvent(newXAxisLabel, newXAxisVar, button) {
-    xAxisLabel = newXAxisLabel;
-    xAxisVar = newXAxisVar;
+
+    setXAxisLabel(newXAxisLabel);
+    setXAxisVar(newXAxisVar);
 
     //Change the colors of the buttons so the new one appears as active
     document.querySelectorAll('.x-Axis-button').forEach(element => {
@@ -86,7 +93,8 @@ function init() {
         .text("Life Expectancy in years");
 
     loadData(currentCsvPath).then(data => {
-        loadedData = data;
+
+        setLoadedData(data);
         populateCountryCheckboxes(loadedData, isContinentView); // Populate the checkboxes
         updateChartBasedOnCountrySelection();
 

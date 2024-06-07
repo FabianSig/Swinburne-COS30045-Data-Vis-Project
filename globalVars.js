@@ -2,7 +2,22 @@ export const w = 660;
 export const h = 500;
 export const padding = 56;
 
-export let trailsVisibility = false;
+export var loadedData = [];
+export var xAxisVar = "gdpPerCapita";
+export var xAxisLabel = "GDP per Capita in USD";
+export var trailsVisibility = false;
+
+export function setLoadedData(data){
+    loadedData = data;
+}
+
+export function setXAxisVar(_xAxisVar){
+    xAxisVar = _xAxisVar;
+}
+
+export function setXAxisLabel(_xAxisLabel){
+    xAxisLabel = _xAxisLabel;
+}
 
 export function toggleTrailsVisibility(){
     trailsVisibility = !trailsVisibility
