@@ -1,7 +1,25 @@
+/**
+ * chartRendering.js contains functions for rendering a data visualization chart using D3.js.
+ * It handles the creation of scales, axes, circles, and lines for the chart, and manages
+ * interactions such as tooltips and highlighting.
+ *
+ * - Imports necessary variables from globalVars.js.
+ * - Defines and exports functions for drawing the chart and managing interactions.
+ * - Contains helper functions for updating the highlighted continent and adding a legend.
+ */
+
 import { w, h, padding, loadedData, xAxisLabel, xAxisVar, stroke_colors, continentColors, trailsVisibility} from './globalVars.js'
 
+// Variable to store the currently highlighted continent
 var highlightedContinent = "";
 
+/**
+ * Draws the chart with the given data and settings.
+ * @param {Object} svg - The SVG element to draw the chart in.
+ * @param {Array<Object>} dataForPlot - The data to plot on the chart.
+ * @param {number} year - The year for which the data is being plotted.
+ * @param {boolean} isContinentView - Indicates whether the view is by continent.
+ */
 export function drawChart(svg, dataForPlot, year, isContinentView) {
 
     var xScale = d3.scaleLog().base(2)
@@ -119,6 +137,10 @@ export function drawChart(svg, dataForPlot, year, isContinentView) {
     addLegend(svg);
 }
 
+/**
+ * Adds a legend to the chart.
+ * @param {Object} svg - The SVG element to add the legend to.
+ */
 function addLegend(svg){
     var legendContainer = d3.select("#legend-container");
     var continents = ["Africa", "Asia", "Europe", "North America", "Oceania", "South America"];
@@ -148,6 +170,11 @@ function addLegend(svg){
     legend.exit().remove();
 }
 
+/**
+ * Updates the highlighted continent in the chart, adjusting the opacity of elements.
+ * @param {string} continent - The continent to highlight.
+ * @param {Object} svg - The SVG element containing the chart.
+ */
 function updateHighlightedContinent(continent, svg){
 
     if(continent === highlightedContinent) {
@@ -188,4 +215,3 @@ function updateHighlightedContinent(continent, svg){
         highlightedContinent = continent;
     }
 }
-
