@@ -1,4 +1,4 @@
-import { loadData } from './dataProcessing.js';
+import { loadData, populateCountryCheckboxes} from './util.js';
 import { drawChart} from './chartRendering.js';
 import { w, h, padding, toggleTrailsVisibility } from './globalVars.js'
 
@@ -18,43 +18,10 @@ function debounce(func, wait) {
     };
 }
 
-function populateCountryCheckboxes(loadedData, isContinentView) {
-    const container = document.getElementById('countryCheckboxes');
-    if (!container) return;
-    container.innerHTML = '';
-    const countries = isContinentView
-        ? [...new Set(loadedData.filter(d => d.country === "N/A").map(d => d.continent))]
-        : [...new Set(loadedData.filter(d => d.country !== "N/A").map(d => d.country))];
-
-    countries.sort().forEach(country => {
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('country-checkbox-wrapper');
-
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.value = country;
-        checkbox.id = `checkbox-${country}`;
-        checkbox.classList.add('country-checkbox');
-        checkbox.checked = true;
-
-        const label = document.createElement('label');
-        label.htmlFor = `checkbox-${country}`;
-        label.textContent = country;
-
-        wrapper.appendChild(checkbox);
-        wrapper.appendChild(label);
-        container.appendChild(wrapper);
-    });
-}
-
-function getSelectedCountries() {
-    const checkboxes = document.querySelectorAll('.country-checkbox:checked');
-    return Array.from(checkboxes).map(cb => cb.value);
-}
 
 function updateChartBasedOnCountrySelection() {
     let year = Number(document.getElementById('yearSlider').value);
-    let selectedCountries = getSelectedCountries();
+    let selectedCountries = Array.from(document.querySelectorAll('.country-checkbox:checked')).map(cb => cb.value);
 
     let displayData = loadedData.filter(d => d.year === year)
                                 .sort((a, b) => b.values.population - a.values.population);
