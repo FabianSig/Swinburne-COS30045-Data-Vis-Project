@@ -1,4 +1,4 @@
-import { loadData, populateCountryCheckboxes} from './util.js';
+import { loadData, populateCountryCheckboxes, debounce} from './util.js';
 import { drawChart} from './chartRendering.js';
 import { w, h, padding, toggleTrailsVisibility } from './globalVars.js'
 
@@ -9,15 +9,6 @@ let svg;
 let xAxisVar = "gdpPerCapita";
 let xAxisLabel = "GDP per Capita in USD";
 let isContinentView = false;
-
-function debounce(func, wait) {
-    let timeout;
-    return function (...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), wait);
-    };
-}
-
 
 function updateChartBasedOnCountrySelection() {
     let year = Number(document.getElementById('yearSlider').value);

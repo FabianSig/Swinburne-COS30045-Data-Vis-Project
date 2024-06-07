@@ -116,10 +116,10 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
 
     svg.selectAll('circle').raise();
 
-    addLegend(continentColors, svg);
+    addLegend(svg);
 }
 
-function addLegend(continentColors, svg){
+function addLegend(svg){
     var legendContainer = d3.select("#legend-container");
     var continents = ["Africa", "Asia", "Europe", "North America", "Oceania", "South America"];
 
@@ -187,7 +187,5 @@ function updateHighlightedContinent(continent, svg){
         
         highlightedContinent = continent;
     }
-
-
 }
 
