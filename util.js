@@ -1,4 +1,13 @@
 /**
+ * util.js contains utility functions for handling data loading,
+ * DOM manipulation for country checkboxes, and function debouncing.
+ *
+ * - loadData: Loads and processes the CSV data.
+ * - populateCountryCheckboxes: Populates the country checkboxes based on the loaded data and view type.
+ * - debounce: Creates a debounced function that delays invoking the provided function.
+ */
+
+/**
  * Loads and processes the CSV data.
  * @param {string} csvPath - The path to the CSV file.
  * @returns {Promise<Array<Object>>} A promise that resolves to an array of objects representing the data.
