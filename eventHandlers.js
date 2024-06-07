@@ -1,5 +1,5 @@
 import { loadData } from './dataProcessing.js';
-import { drawChart, updateChart } from './chartRendering.js';
+import { drawChart} from './chartRendering.js';
 import { w, h, padding, toggleTrailsVisibility } from './globalVars.js'
 
 let loadedData = [];
@@ -9,15 +9,6 @@ let svg;
 let xAxisVar = "gdpPerCapita";
 let xAxisLabel = "GDP per Capita in USD";
 let isContinentView = false;
-
-const continentColors = {
-    "North America": "#1f77b4",
-    "South America": "#ff7f0e",
-    "Europe": "#2ca02c",
-    "Africa": "#d62728",
-    "Asia": "#9467bd",
-    "Oceania": "#8c564b"
-};
 
 function debounce(func, wait) {
     let timeout;
@@ -61,9 +52,9 @@ function getSelectedCountries() {
     return Array.from(checkboxes).map(cb => cb.value);
 }
 
-function updateChartBasedOnCountrySelection(svg, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
-    year = Number(document.getElementById('yearSlider').value);
-    var selectedCountries = getSelectedCountries();
+function updateChartBasedOnCountrySelection() {
+    let year = Number(document.getElementById('yearSlider').value);
+    let selectedCountries = getSelectedCountries();
 
     let displayData = loadedData.filter(d => d.year === year)
                                 .sort((a, b) => b.values.population - a.values.population);
@@ -76,7 +67,7 @@ function updateChartBasedOnCountrySelection(svg, loadedData, year, xAxisVar, xAx
         displayData = displayData.filter(d => d.country !== "N/A" && selectedCountries.includes(d.country));
     }
 
-    drawChart(svg, displayData, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors);
+    drawChart(svg, displayData, loadedData, year, xAxisVar, xAxisLabel, isContinentView);
 }
 
 function playYears() {
@@ -93,7 +84,7 @@ function playYears() {
             const wholeYear = Math.floor(currentYear);
             if (wholeYear !== lastWholeYear) { // Update chart only when whole year changes
                 lastWholeYear = wholeYear;
-                updateChartBasedOnCountrySelection(svg, loadedData, wholeYear, xAxisVar, xAxisLabel, isContinentView, continentColors);
+                updateChartBasedOnCountrySelection(svg, loadedData, wholeYear, xAxisVar, xAxisLabel, isContinentView);
             }
         } else {
             clearInterval(playInterval);
@@ -106,10 +97,8 @@ function changeData(newXAxisLabel, newXAxisVar, button) {
     xAxisLabel = newXAxisLabel;
     xAxisVar = newXAxisVar;
     updateActiveButton(button);
-    updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+  updateChartBasedOnCountrySelection();
 }
-
-window.changeData = changeData;
 
 function init() {
     svg = d3.select("#chart").append("svg")
@@ -141,31 +130,31 @@ function init() {
     loadData(currentCsvPath).then(data => {
         loadedData = data;
         populateCountryCheckboxes(loadedData, isContinentView); // Populate the checkboxes
-        updateChart(svg, loadedData, 1980, xAxisVar, xAxisLabel, isContinentView, continentColors);
+        updateChartBasedOnCountrySelection();
 
         document.getElementById('yearSlider').addEventListener('input', debounce(function () {
-            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+          updateChartBasedOnCountrySelection();
         }, 100));
 
         document.getElementById('toggleView').addEventListener('click', function () {
             isContinentView = !isContinentView;
             populateCountryCheckboxes(loadedData, isContinentView); // Repopulate the checkboxes based on the view
-            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+          updateChartBasedOnCountrySelection();
         });
 
         document.getElementById('toggleTrails').addEventListener('click', function () {
             toggleTrailsVisibility();
-            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+          updateChartBasedOnCountrySelection();
         });
 
         document.getElementById('countryCheckboxes').addEventListener('change', function () {
-            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+          updateChartBasedOnCountrySelection();
         });
 
         document.getElementById('checkAll').addEventListener('change', function () {
             const checkboxes = document.querySelectorAll('.country-checkbox');
             checkboxes.forEach(cb => cb.checked = this.checked);
-            updateChartBasedOnCountrySelection(svg, loadedData, document.getElementById('yearSlider').value, xAxisVar, xAxisLabel, isContinentView, continentColors);
+          updateChartBasedOnCountrySelection();
         });
 
         document.getElementById('playButton').addEventListener('click', playYears); // Add event listener for play button
@@ -180,4 +169,5 @@ function updateActiveButton(button){
     button.style.backgroundColor = "#a4b6ca";
 }
 
+window.changeData = changeData;
 window.onload = init;

@@ -1,5 +1,6 @@
-var highlightedContinent = "";
 import { w, h, padding, stroke_colors, continentColors, trailsVisibility} from './globalVars.js'
+
+var highlightedContinent = "";
 
 export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLabel, isContinentView) {
 
@@ -116,16 +117,6 @@ export function drawChart(svg, dataForPlot, loadedData, year, xAxisVar, xAxisLab
     svg.selectAll('circle').raise();
 
     addLegend(continentColors, svg);
-}
-
-export function updateChart(svg, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors) {
-    year = Number(document.getElementById('yearSlider').value);
-
-    let displayData = loadedData.filter(d => d.year === year).sort((a, b) => b.values.population - a.values.population);
-
-    isContinentView ? displayData = displayData.filter(d => d.country === "N/A") : displayData = displayData.filter(d => d.country !== "N/A");
-
-    drawChart(svg, displayData, loadedData, year, xAxisVar, xAxisLabel, isContinentView, continentColors);
 }
 
 function addLegend(continentColors, svg){
