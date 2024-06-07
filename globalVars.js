@@ -1,43 +1,22 @@
 /**
- * The width of the chart.
- * @type {number}
+ * util.js contains constants, variables, and functions related to the
+ * configuration and state management of a data visualization chart.
+ *
+ * - Constants for chart dimensions and padding.
+ * - Variables to hold loaded data, x-axis settings, and trail visibility state.
+ * - Functions to update the state of these variables.
+ * - Color mappings for different continents.
  */
+
+// Constants for chart dimensions and padding
 export const w = 660;
-
-/**
- * The height of the chart.
- * @type {number}
- */
 export const h = 500;
-
-/**
- * The padding for the chart.
- * @type {number}
- */
 export const padding = 56;
 
-/**
- * The loaded data for the chart.
- * @type {Array<Object>}
- */
+// Variables for chart data and settings
 export var loadedData = [];
-
-/**
- * The variable to be used for the x-axis.
- * @type {string}
- */
 export var xAxisVar = "gdpPerCapita";
-
-/**
- * The label for the x-axis.
- * @type {string}
- */
 export var xAxisLabel = "GDP per Capita in USD";
-
-/**
- * The csv path of the data.
- * @type {string}
- */
 export var csvPath = './data/cleanedData/merged_data.csv';
 
 /**

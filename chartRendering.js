@@ -21,7 +21,7 @@ export function drawChart(svg, dataForPlot, year, isContinentView) {
 
     var selectedCountries = new Set(dataForPlot.map(d => isContinentView ? d.continent : d.country));
 
-    var filteredData = loadedData.filter(d => d.year <= year 
+    var filteredData = loadedData.filter(d => d.year <= year
                                             && (isContinentView ? d.country === "N/A" : d.country !== "N/A")
                                             && selectedCountries.has(isContinentView ? d.continent : d.country)
                                         );
@@ -46,7 +46,7 @@ export function drawChart(svg, dataForPlot, year, isContinentView) {
         .style("opacity", 0)
         .transition()
         .duration(750)
-        .style('opacity', d => trailsVisibility ? ((d[0].continent === highlightedContinent) || !highlightedContinent ? 1 : 0.1) : 0);    
+        .style('opacity', d => trailsVisibility ? ((d[0].continent === highlightedContinent) || !highlightedContinent ? 1 : 0.1) : 0);
 
     lines.transition()
         .duration(750)
@@ -96,7 +96,7 @@ export function drawChart(svg, dataForPlot, year, isContinentView) {
         .on('mouseout', function () {
             d3.select('#tooltip').style('visibility', 'hidden');
             d3.select(this)
-                .style('cursor', 'default') 
+                .style('cursor', 'default')
                 .attr('stroke-width', 1);
         })
         .on('click', (d, e) => updateHighlightedContinent(e.continent, svg))
@@ -160,7 +160,7 @@ function updateHighlightedContinent(continent, svg){
                 .transition()
                 .duration(750)
                 .style('opacity', 1);
-                
+
         d3.selectAll('.legend-item')
                 .transition()
                 .duration(750)
@@ -184,7 +184,7 @@ function updateHighlightedContinent(continent, svg){
             .transition()
             .duration(750)
             .style('opacity', d => d === continent ? 1 : 0.3);
-        
+
         highlightedContinent = continent;
     }
 }
