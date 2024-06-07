@@ -17,7 +17,7 @@ export const padding = 56;
 export var loadedData = [];
 export var xAxisVar = "gdpPerCapita";
 export var xAxisLabel = "GDP per Capita in USD";
-export var csvPath = './data/cleanedData/merged_data.csv';
+export var csvPath = 'data.csv';
 
 /**
  * The visibility of the trails in the chart.
