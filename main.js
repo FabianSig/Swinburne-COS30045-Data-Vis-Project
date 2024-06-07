@@ -59,7 +59,7 @@ function playYears() {
             clearInterval(playInterval);
             yearSlider.disabled = false
         }
-    }, 40); // Adjust the interval time as needed
+    }, 40);
 }
 
 /**
